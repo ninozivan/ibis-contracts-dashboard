@@ -1,0 +1,15 @@
+/* COLORS */
+.c-main-sidebar-wrap {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: auto;
+  background-color: #021844;
+  color: #fff;
+  width: 90px;
+}
+.c-main-content-wrap {
+  padding-left: 90px;
+}
