@@ -45,9 +45,7 @@ function FilterActions () {
     //
     ////Call fuction from DrawDiagrams object and place content on html
     this.renderDiagrams = function (){
-        console.log('before')
         this.el_placeholderForDiagrams.innerHTML = this.obj_diagramsDraw.renderDiagrams(this.enum_currentLayoutType);
-        console.log('after')
     }
     //
     ////

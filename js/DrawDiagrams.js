@@ -1,11 +1,14 @@
 "use strict";
 //referencing AppSettings from 'js/AppSettings'
 function DrawDiagrams() {
+    this.selectedClientData = null;
     this.sayHi = function () {
         console.log('DrawDiagram says Hello!!!');
     }
     //
     this.renderDiagrams = function (layoutType) {
+        this.selectedClientData = AppData.listOfContracts[0];
+        //
         if (layoutType === appSettings.layoutEnums.tables) {
             return this.createContentForTables();
         } else if (layoutType === appSettings.layoutEnums.graphs) {
@@ -73,40 +76,40 @@ function DrawDiagrams() {
             `<div class="col-12 col-lg-6 col-xl-4">
                 <div class="row">
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">WiFi connected time</span>` + this.returnPieChartPlaceholder('Percent of time with connected user (s)') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">WiFi connected time</span>` + this.returnPieChartPlaceholder(['Percent of time with connected user (s)']) + `</div></div>
                     </div>
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Channel</span>` + this.returnPieChartPlaceholder('Auto: Yes', 'Auto: No') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Channel</span>` + this.returnPieChartPlaceholder(['Auto: Yes', 'Auto: No']) + `</div></div>
                     </div>                                   
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw WiFi Usage</span>` + this.returnPieChartPlaceholder('Low', 'Medium', 'High') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw WiFi Usage</span>` + this.returnPieChartPlaceholder(['Low', 'Medium', 'High']) + `</div></div>
                     </div>
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Percent of time with Sticky Clients</span>` + this.returnPieChartPlaceholder('Percent of time with sticky clients') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Percent of time with Sticky Clients</span>` + this.returnPieChartPlaceholder(['Percent of time with sticky clients']) + `</div></div>
                     </div>                   
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference</span>` + this.returnPieChartPlaceholder('Low', 'Medium', 'High') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference</span>` + this.returnPieChartPlaceholder(['Low', 'Medium', 'High']) + `</div></div>
                     </div>
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Client's RSS Status</span>` + this.returnPieChartPlaceholder('Good', 'Medium', 'Bad') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Client's RSS Status</span>` + this.returnPieChartPlaceholder(['Good', 'Medium', 'Bad']) + `</div></div>
                     </div>                  
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference Home</span>` + this.returnPieChartPlaceholder('Low', 'Medium', 'High') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference Home</span>` + this.returnPieChartPlaceholder(['Low', 'Medium', 'High']) + `</div></div>
                     </div>
                     <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw RSS Status</span>` + this.returnPieChartPlaceholder('Good', 'Medium', 'Bad') + `</div></div>
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw RSS Status</span>` + this.returnPieChartPlaceholder(['Good', 'Medium', 'Bad']) + `</div></div>
                     </div>                  
                 </div>
             </div>`;
         var content_fourthColumn =
             `<div class="col-12 col-lg-6 col-xl-2">
-                <div class="card"><div class="card-body">Overall Status` + this.returnRandomBMGBadge() + `</div></div>
+                <div class="card"><div class="card-body">` + this.returnHgwInfoTable() + `</div></div>
             </div>`;
         /*  since we created placeholder containers (this.returnPieChartPlaceholder), we will start checking when those elements are added to DOM
             we want to attach PieChart graphs when those elements are added to DOM
@@ -186,73 +189,123 @@ function DrawDiagrams() {
                 plotShadow: false,
                 type: 'pie'
             },
+            colors: ['#20fc8f', '#ffa100', '#ff5b58', '#27aae1', 'purple', 'brown'],
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
-                        enabled: false
+                        enabled: false,
+                        //distance: -10
                     },
                     showInLegend: true
                 }
             },
             title: false,
             legend: {
+                width:100,
+                itemWidth:100,
+                itemStyle: {
+                    width:100
+                },                
                 align: 'left',
                 verticalAlign: 'middle',
                 layout: 'vertical'
             },            
             series: [{
                 colorByPoint: true,
-                data: [{
-                    name: 'Internet Explorer',
-                    y: 11.84
-                }, {
-                    name: 'Firefox',
-                    y: 10.85
-                }, {
-                    name: 'Edge',
-                    y: 4.67
-                }, {
-                    name: 'Safari',
-                    y: 4.18
-                }, {
-                    name: 'Other',
-                    y: 7.05
-                }]
-            }]
+                innerSize: '50%',
+                data: this.returnOrganizedDataForPieChart(inputObjectWithData.chartLegend)
+            }],
+            tooltip: {
+                formatter: function() {
+                    return this.key;
+                }
+            }            
         });        
     }
+    this.returnOrganizedDataForPieChart = function (inputChartLegendAsArray){
+        //inputChartLegendAsArray will be list of labels that we inputed when we created placeholder element (returnPieChartPlaceholder('Low', 'Medium', 'High'))
+        var tempArrayOfLabels = inputChartLegendAsArray;
+        //
+        var arrayOfLabelValues = [];
+        var numberToDivideOnParts = 100;
+        var x;
+        for (x=0;x<tempArrayOfLabels.length;x++){
+            var s = Math.round(Math.random() * (numberToDivideOnParts));
+            numberToDivideOnParts -= s;
+            if (x == (tempArrayOfLabels.length - 1 ) && (tempArrayOfLabels.length > 1) && (numberToDivideOnParts > 0)){
+                arrayOfLabelValues.push(s + numberToDivideOnParts);
+            }else{
+                arrayOfLabelValues.push(s);
+            }      
+        }
+        var dataToExport = []
+        tempArrayOfLabels.forEach( function(item, index, object){
+            var newLabelObj = {
+                name: tempArrayOfLabels[index] + " " + arrayOfLabelValues[index] + "%",
+                y: arrayOfLabelValues[index]
+            }
+            dataToExport.push(newLabelObj);
+        })
+        if (tempArrayOfLabels.length == 1){
+            var newLabelObj = {
+                name: "Empty",
+                y: numberToDivideOnParts,
+                color: "#d3d3d3"
+            }
+            dataToExport.push(newLabelObj);
+        }        
+        return dataToExport;
+    }
+    //
     this.pieRenderedInterval = null;
     this.startCheckingForAddedPiePlaceholders = function () {
         this.remainingPieChartsForAdding = JSON.parse(JSON.stringify(this.listOfAllPieChartElements));
         this.pieRenderedInterval = setInterval(this.checkForPieChartsAddedToView, 300)
     }
     this.checkForPieChartsAddedToView = function () {
-        //console.log('interval fired')
-        // this.remainingPieChartsForAdding.forEach(function(singlePieObj, index) {
-        //     console.log('id of singlePieObj: ' + singlePieObj.elementId);
-        // });
         this.remainingPieChartsForAdding.forEach(function (arrayItem, index, arrayObject) {
-            console.log('start')
-            console.log(arrayItem)
-            console.log(index)
-            console.log(arrayObject)
-            console.log('end')
             if (document.getElementById(arrayItem.elementId)) {
-                console.log('==removed start: ' + arrayItem.elementId);
                 this.attachPieChartToPlaceholder(arrayItem);
                 this.remainingPieChartsForAdding.splice(index, 1);
-                console.log('==removed end');
             }
         }.bind(this));
         if (this.remainingPieChartsForAdding.length < 1) {
             console.log('**************** interval cleared *************')
-            console.log('**************** interval cleared *************')
-            console.log('**************** interval cleared *************')
             clearInterval(this.pieRenderedInterval);
         }
     }.bind(this);
+    ////
+    this.returnHgwInfoTable = function (){
+        var tableTemplate = `<div class="table-responsive c-hgw-info-table"><table class="table table-sm">
+            <thead>
+                <tr>
+                    <th colspan="2">HGw Info</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>WiFi enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.wifiEnabled + `</td></tr>
+                <tr><td>HGw standard:</td><td>`+ this.selectedClientData.contractHgwInfo.hgwStandard + `</td></tr>
+                <tr><td>IP address:</td><td>`+ this.selectedClientData.contractHgwInfo.ipAddress + `</td></tr>
+                <tr><td>MAC:</td><td>`+ this.selectedClientData.contractMacAddress + `</td></tr>
+                <tr><td>Contract No:</td><td>`+ this.selectedClientData.contractNumber + `</td></tr>
+                <tr><td>Auto channel enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.autoChannelEnabled + `</td></tr>
+                <tr><td>SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.ssid + `</td></tr>
+                <tr><td>Security:</td><td>`+ this.selectedClientData.contractHgwInfo.security + `</td></tr>
+                <tr><td>Band:</td><td>`+ this.selectedClientData.contractHgwInfo.band + `</td></tr>
+                <tr><td>Hidden SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.hiddenSsid + `</td></tr>
+                <tr><td>Bandwith:</td><td>`+ this.selectedClientData.contractHgwInfo.bandwith + `</td></tr>
+                <tr><td>Up time:</td><td>`+ this.selectedClientData.contractHgwInfo.upTime + `</td></tr>
+                <tr><td>Equipment:</td><td>`+ this.selectedClientData.contractHgwInfo.equipment + `</td></tr>
+                <tr><td>Description:</td><td>`+ this.selectedClientData.contractHgwInfo.description + `</td></tr>
+                <tr><td>CMTS ID:</td><td>`+ this.selectedClientData.contractHgwInfo.cmtsId + `</td></tr>
+                <tr><td>Firmware:</td><td>`+ this.selectedClientData.contractHgwInfo.Firmware + `</td></tr>
+            </tbody>
+        </table></div>`
+        return tableTemplate;        
+    }
     ////
     this.createContentForGraphs = function () {
         var layoutToExport = null;

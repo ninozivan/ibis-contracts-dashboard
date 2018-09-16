@@ -56,6 +56,18 @@
 .card .c-custom-table > table > tbody > tr > td:not(:first-child) {
   font-size: 12px;
 }
+.card .c-hgw-info-table > table > thead > tr > th {
+  font-size: 22px;
+  color: #021844;
+  text-align: center;
+  border-top: none;
+}
+.card .c-hgw-info-table > table > tbody > tr > td {
+  font-size: 12px;
+}
+.card .c-hgw-info-table > table > tbody > tr > td:last-child {
+  text-align: right;
+}
 .c-main-sidebar-wrap {
   display: none;
   position: fixed;
