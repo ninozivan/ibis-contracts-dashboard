@@ -1,6 +1,63 @@
 /* COLORS */
+/* #region Custom Grid content */
+/* #endregion Custom Grid content */
+.card:not(:last-child) {
+  margin-bottom: 5px;
+}
+.card .card-body {
+  padding: 1rem;
+}
+.card .c-card-title {
+  display: inline-block;
+  font-size: 16px;
+  color: #021844;
+  font-weight: 600;
+}
+@media only screen and (min-width: 992px) {
+  .card .c-card-title {
+    font-size: 18px;
+  }
+}
+.card .c-small-text-for-cards {
+  font-size: 16px;
+  color: #053ba7;
+}
+.card .badge {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 400;
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .card .badge {
+    min-width: 100px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .card .badge {
+    min-width: 100px;
+  }
+}
+.card .c-custom-table {
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-bottom: -30px;
+  font-size: 14px;
+  width: auto !important;
+  text-align: center;
+}
+.card .c-custom-table > table > thead > tr > th:first-child,
+.card .c-custom-table > table > tbody > tr > th:first-child,
+.card .c-custom-table > table > thead > tr > td:first-child,
+.card .c-custom-table > table > tbody > tr > td:first-child {
+  padding-left: 1rem;
+  text-align: left;
+}
+.card .c-custom-table > table > thead > tr > td:not(:first-child),
+.card .c-custom-table > table > tbody > tr > td:not(:first-child) {
+  font-size: 12px;
+}
 .c-main-sidebar-wrap {
-  display: block;
+  display: none;
   position: fixed;
   left: 0;
   top: 0;
@@ -10,6 +67,13 @@
   color: #fff;
   width: 90px;
 }
-.c-main-content-wrap {
-  padding-left: 90px;
+@media only screen and (min-width: 992px) {
+  .c-main-sidebar-wrap {
+    display: block;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .c-main-content-wrap {
+    padding-left: 90px;
+  }
 }
