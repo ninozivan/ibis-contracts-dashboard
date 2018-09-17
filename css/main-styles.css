@@ -7,6 +7,9 @@
 .card:not(:last-child) {
   margin-bottom: 5px;
 }
+.card.bg-dark .c-card-title {
+  color: #fff;
+}
 .card .card-body {
   padding: 1rem;
 }
@@ -24,6 +27,9 @@
 .card .c-small-text-for-cards {
   font-size: 16px;
   color: #053ba7;
+}
+.card .c-small-text-for-cards.c-xs {
+  font-size: 12px;
 }
 .card .badge {
   font-size: 14px;
@@ -81,11 +87,16 @@
   background-color: #021844;
   color: #fff;
   width: 90px;
+  text-align: center;
 }
 @media only screen and (min-width: 992px) {
   .c-main-sidebar-wrap {
     display: block;
   }
+}
+.c-main-sidebar-wrap .fas {
+  font-size: 28px;
+  margin-top: 20px;
 }
 @media only screen and (min-width: 992px) {
   .c-main-content-wrap {
@@ -120,7 +131,7 @@
 }
 .c-autocomplete-wrapper {
   position: relative;
-  display: inline-block;
+  display: block;
 }
 .c-autocomplete-wrapper .c-autocomplete-items {
   position: absolute;
@@ -129,7 +140,7 @@
   border-top: none;
   z-index: 99;
   /*position the autocomplete items to be the same width as the container:*/
-  top: 100%;
+  top: 64%;
   left: 0;
   right: 0;
 }
@@ -164,4 +175,7 @@
 #cid-hgw-info-content-placeholder .c-has-info-cards .card > .card-body {
   font-size: 12px;
   padding: 8px 10px;
+}
+#cid-diagrams-content-placeholder > .col-12 > .row {
+  margin-bottom: 0.25rem;
 }

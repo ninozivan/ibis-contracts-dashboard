@@ -1,20 +1,20 @@
 "use strict";
 //referencing AppSettings from 'js/AppSettings'
 function DrawDiagrams() {
-    this.selectedClientData = null;
-    this.sayHi = function () {
-        console.log('DrawDiagram says Hello!!!');
+    var selectedContractData = null;//selected contract from list of all Contracts (AppData.listOfContracts..)
+    this.updateChangeSelectedContractData = function (inputNewData){
+        selectedContractData = inputNewData
     }
     //
     this.renderDiagrams = function (layoutType) {
-        this.selectedClientData = AppData.listOfContracts[0];
+        //selectedContractData = AppData.listOfContracts[0];
         //
         if (layoutType === appSettings.layoutEnums.tables) {
             return this.createContentForTables();
         } else if (layoutType === appSettings.layoutEnums.graphs) {
             return this.createContentForGraphs();
         } else {
-            return '<div class="col-12"><div class="card bg-light"><div class="card-body text-center">Start typing Contract ID or Mac Address to show data.</div></div></div>'
+            return '<div class="col-12"><div class="card bg-light"><div class="card-body text-center"><i class="fas fa-info-circle"></i> Start typing Contract ID or Mac Address to show data.</div></div></div>'
         }
     }
     /*
@@ -42,26 +42,26 @@ function DrawDiagrams() {
                 </div></div>
                 <div class="card"><div class="card-body"><span class="c-card-title">Retransmission Status</span>` + this.returnRandomBMGBadge() + `
                     <div class="c-small-text-for-cards">HGw Number of retransmissions
-                        <span class="float-right">` + this.returnRandomNumberInRange(4500, 5300) + `</span>
+                        <span class="float-right">` + returnRandomNumberInRange(4500, 5300) + `</span>
                     </div>
                 </div></div>
                 <div class="card"><div class="card-body">
                     <div class="c-small-text-for-cards">Total Number of Clients
-                        <span class="float-right">` + this.returnRandomNumberInRange(5, 200) + `</span>
+                        <span class="float-right">` + returnRandomNumberInRange(5, 200) + `</span>
                     </div>
                     <div class="c-small-text-for-cards">Max. number of concurent clients
-                        <span class="float-right">` + this.returnRandomNumberInRange(1, 77) + `</span>
+                        <span class="float-right">` + returnRandomNumberInRange(1, 77) + `</span>
                     </div>                    
                 </div></div>
                 <div class="card"><div class="card-body"><span class="c-card-title">HGw Combined status</span>
                     <div class="c-small-text-for-cards">HGw Number of clients
-                        <span class="float-right">` + this.returnRandomNumberInRange(10, 35) + `</span>
+                        <span class="float-right">` + returnRandomNumberInRange(10, 35) + `</span>
                     </div>
                     <div class="c-small-text-for-cards">HGw Number of sticky clients
-                        <span class="float-right">` + this.returnRandomNumberInRange(1, 5) + `</span>
+                        <span class="float-right">` + returnRandomNumberInRange(1, 5) + `</span>
                     </div>
                     <div class="c-small-text-for-cards">Data transfered [GB]
-                        <span class="float-right">` + this.returnRandomNumberInRange(3, 35) + `</span>
+                        <span class="float-right">` + returnRandomNumberInRange(3, 35) + `</span>
                     </div>                                        
                 </div></div>
             </div>`;
@@ -70,22 +70,28 @@ function DrawDiagrams() {
                 <div class="card"><div class="card-body"><span class="c-card-title">HGw Bitrate [Mbps]</span>` + this.returnKpiTable('Bitrate', true) + `</div></div>
                 <div class="card"><div class="card-body">
                     <div class="c-small-text-for-cards">HGW total traffic [GB]
-                        <span class="float-right">` + this.returnRandomNumberInRange(1, 17) + `</span>
+                        <span class="float-right">` + returnRandomNumberInRange(1, 17) + `</span>
                     </div>                  
                 </div></div>
                 <div class="card"><div class="card-body"><span class="c-card-title">HGw RSS</span>` + this.returnKpiTable('RSS [dBm]', true) + `</div></div>
                 <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference network RSS</span>` + this.returnKpiTable('RSS [dBm]', false) + `</div></div>
             </div>`;
         var content_thirdColumn =
-            `<div class="col-12 col-lg-6 col-xl-3">
+            `<div class="col-12 col-lg-6 col-xl-3 mt-1 mt-xl-0">
                 <div class="row">
                     <div class="col-12">
                         <div class="card"><div class="card-body"><span class="c-card-title">WiFi connected time</span>` + this.returnPieChartPlaceholder(['Percent of time with connected user (s)']) + `</div></div>
-                    </div>                                 
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Channel</span>` + this.returnPieChartPlaceholder(['Auto: Yes', 'Auto: No']) + `</div></div>
+                        <div class="card"><div class="card-body">
+                            <span class="c-card-title">HGw Channel</span>
+                            <div class="c-small-text-for-cards c-xs">Auto channel enabled: ` + returnYesNoIcon(selectedContractData.contractHgwInfo.autoChannelEnabled) +`</div>
+                            <div class="c-small-text-for-cards c-xs">Current channel: ` + selectedContractData.contractHgwInfo.channel +`</div>
+                            <div class="c-small-text-for-cards c-xs">No. of changes: ` + returnRandomNumberInRange(1,99) +`</div>
+                            <div>` + this.returnPieChartPlaceholder(['Auto: Yes', 'Auto: No']) + `</div>
+                        </div></div>
                     </div>
                 </div>
                 <div class="row">
@@ -150,7 +156,7 @@ function DrawDiagrams() {
                 return badgeInvalid
         }
     }
-    this.returnRandomNumberInRange = function (inputMinRange, inputMaxRange) {
+    function returnRandomNumberInRange (inputMinRange, inputMaxRange) {
         return (Math.floor(Math.random() * (inputMaxRange - inputMinRange + 1)) + inputMinRange);
     }
     this.returnKpiTable = function (inputKpiName, inputShowColumnForMin) {
@@ -169,10 +175,10 @@ function DrawDiagrams() {
             <tbody>
                 <tr>
                     <th>`+ inputKpiName + `</th>
-                    <td style="`+ displayStyleForMinColumn + `">` + this.returnRandomNumberInRange(-50, 80) + `</td>
-                    <td style="`+ colorStyleForAvgColumn + `">` + this.returnRandomNumberInRange(-50, 80) + `</td>
-                    <td>`+ this.returnRandomNumberInRange(-50, 80) + `</td>
-                    <td>`+ this.returnRandomNumberInRange(-50, 80) + `</td>
+                    <td style="`+ displayStyleForMinColumn + `">` + returnRandomNumberInRange(-50, 80) + `</td>
+                    <td style="`+ colorStyleForAvgColumn + `">` + returnRandomNumberInRange(-50, 80) + `</td>
+                    <td>`+ returnRandomNumberInRange(-50, 80) + `</td>
+                    <td>`+ returnRandomNumberInRange(-50, 80) + `</td>
                 </tr>
             </tbody>
         </table></div>`
@@ -204,6 +210,19 @@ function DrawDiagrams() {
                 plotShadow: false,
                 type: 'pie'
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },            
             colors: ['#20fc8f', '#ffa100', '#ff5b58', '#27aae1', 'purple', 'brown'],
             plotOptions: {
                 pie: {
@@ -280,7 +299,6 @@ function DrawDiagrams() {
         this.pieRenderedInterval = setInterval(this.checkForPieChartsAddedToView, 300)
     }
     this.checkForPieChartsAddedToView = function () {
-        console.log('called: checkForPieChartsAddedToView() ')
         this.remainingPieChartsForAdding.forEach(function (arrayItem, index, arrayObject) {
             if (document.getElementById(arrayItem.elementId)) {
                 this.attachPieChartToPlaceholder(arrayItem);
@@ -288,67 +306,46 @@ function DrawDiagrams() {
             }
         }.bind(this));
         if (this.remainingPieChartsForAdding.length < 1) {
-            console.log('**************** interval cleared *************')
             clearInterval(this.pieRenderedInterval);
         }
     }.bind(this);
     ////
     this.returnHgwInfoTable = function () {
-        var tableTemplate = `<div class="card mb-3"><div class="card-body">
+        var tableTemplate = `<div class="card bg-dark mb-3"><div class="card-body">
             <div class="row"><div class="col-12 text-center pb-3"><span class="c-card-title">HGw Info</span></div></div>
             <div class="row c-has-info-cards">
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">WiFi enabled: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.wifiEnabled + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">HGw standard: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.hgwStandard + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">IP address: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.ipAddress + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">MAC: <span class="float-right">`+ this.selectedClientData.contractMacAddress + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">WiFi enabled: <span class="float-right"><b>`+ returnYesNoIcon(selectedContractData.contractHgwInfo.wifiEnabled) + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">HGw standard: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.hgwStandard + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">IP address: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.ipAddress + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">MAC: <span class="float-right"><b>`+ selectedContractData.contractMacAddress + `</b></span></div></div></div>
             </div>
             <div class="row c-has-info-cards">
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Contract No: <span class="float-right">`+ this.selectedClientData.contractNumber + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Auto channel enabled: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.autoChannelEnabled + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">SSID: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.ssid + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Security: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.security + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Contract No: <span class="float-right"><b>`+ selectedContractData.contractNumber + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Auto channel enabled: <span class="float-right"><b>`+ returnYesNoIcon(selectedContractData.contractHgwInfo.autoChannelEnabled) + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">SSID: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.ssid + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Security: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.security + `</b></span></div></div></div>
             </div>
             <div class="row c-has-info-cards">
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Band: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.band + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Hidden SSID: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.hiddenSsid + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Bandwith: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.bandwith + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Up time: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.upTime + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Band: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.band + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Hidden SSID: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.hiddenSsid + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Bandwith: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.bandwith + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Up time: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.upTime + `</b></span></div></div></div>
             </div>
             <div class="row c-has-info-cards">
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Equipment: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.equipment + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Description: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.description + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">CMTS ID: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.cmtsId + `</span></div></div></div>
-                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Firmware: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.cmtsId + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Equipment: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.equipment + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Description: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.description + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">CMTS ID: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.cmtsId + `</b></span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Firmware: <span class="float-right"><b>`+ selectedContractData.contractHgwInfo.cmtsId + `</b></span></div></div></div>
             </div>            
         </div></div>`
-        return tableTemplate;        
-        // var tableTemplate = `<div class="card"><div class="card-body"><div class="table-responsive c-hgw-info-table"><table class="table table-sm">
-        //     <thead>
-        //         <tr>
-        //             <th colspan="2">HGw Info</th>
-        //             <th></th>
-        //         </tr>
-        //     </thead>
-        //     <tbody>
-        //         <tr><td>WiFi enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.wifiEnabled + `</td></tr>
-        //         <tr><td>HGw standard:</td><td>`+ this.selectedClientData.contractHgwInfo.hgwStandard + `</td></tr>
-        //         <tr><td>IP address:</td><td>`+ this.selectedClientData.contractHgwInfo.ipAddress + `</td></tr>
-        //         <tr><td>MAC:</td><td>`+ this.selectedClientData.contractMacAddress + `</td></tr>
-        //         <tr><td>Contract No:</td><td>`+ this.selectedClientData.contractNumber + `</td></tr>
-        //         <tr><td>Auto channel enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.autoChannelEnabled + `</td></tr>
-        //         <tr><td>SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.ssid + `</td></tr>
-        //         <tr><td>Security:</td><td>`+ this.selectedClientData.contractHgwInfo.security + `</td></tr>
-        //         <tr><td>Band:</td><td>`+ this.selectedClientData.contractHgwInfo.band + `</td></tr>
-        //         <tr><td>Hidden SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.hiddenSsid + `</td></tr>
-        //         <tr><td>Bandwith:</td><td>`+ this.selectedClientData.contractHgwInfo.bandwith + `</td></tr>
-        //         <tr><td>Up time:</td><td>`+ this.selectedClientData.contractHgwInfo.upTime + `</td></tr>
-        //         <tr><td>Equipment:</td><td>`+ this.selectedClientData.contractHgwInfo.equipment + `</td></tr>
-        //         <tr><td>Description:</td><td>`+ this.selectedClientData.contractHgwInfo.description + `</td></tr>
-        //         <tr><td>CMTS ID:</td><td>`+ this.selectedClientData.contractHgwInfo.cmtsId + `</td></tr>
-        //         <tr><td>Firmware:</td><td>`+ this.selectedClientData.contractHgwInfo.Firmware + `</td></tr>
-        //     </tbody>
-        // </table></div></div></div>`
-        // return tableTemplate;
+        return tableTemplate;
+    }
+    function returnYesNoIcon (inputBooleanValue){
+        if (inputBooleanValue == true){
+            return '<i class="fas fa-check text-success"></i> Yes'
+        }else{
+            return '<i class="fas fa-ban text-danger"></i> No'
+        }
     }
     this.resetTableValuesBeforeRendering = function (){
         this.listOfAllPieChartElements = [];
@@ -409,7 +406,7 @@ function DrawDiagrams() {
         }
         //first graph template
         var content_firstGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_firstGraph) + `</div></div>
             </div>`;
         //second graph data       
@@ -477,7 +474,7 @@ function DrawDiagrams() {
         }
         //second graph template
         var content_secondGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_secondGraph) + `</div></div>
             </div>`;
         //third graph data
@@ -555,7 +552,7 @@ function DrawDiagrams() {
         }
         //third graph template            
         var content_thirdGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_thirdGraph) + `</div></div>
             </div>`;
         //fourth graph data
@@ -633,7 +630,7 @@ function DrawDiagrams() {
         }
         //fourth graph template            
         var content_fourthGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_fourthGraph) + `</div></div>
             </div>`;
         //fifth graph data
@@ -721,7 +718,7 @@ function DrawDiagrams() {
         }
         //fifth graph template             
         var content_fifthGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_fifthGraph) + `</div></div>
             </div>`;
         //sixth graph data
@@ -809,7 +806,7 @@ function DrawDiagrams() {
         }
         //sixth graph template              
         var content_sixGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_sixthGraph) + `</div></div>
             </div>`;
         //seventh graph data
@@ -892,7 +889,7 @@ function DrawDiagrams() {
         }
         //seventh graph template             
         var content_sevenGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_seventhGraph) + `</div></div>
             </div>`;
         //eight graph data
@@ -940,7 +937,7 @@ function DrawDiagrams() {
         }
         //eight graph template              
         var content_eightGraph =
-            `<div class="col-12 col-lg-6">
+            `<div class="col-12 col-lg-6 mb-1">
                 <div class="card"><div class="card-body">` + this.returnGraphPlaceholder(data_eightGraph) + `</div></div>
             </div>`;
         /*  since we created placeholder containers (this.returnGraphPlaceholder), we will start checking when those elements are added to DOM
@@ -965,27 +962,18 @@ function DrawDiagrams() {
     this.graphsRenderedInterval = null;
     this.counterNumx = 0;
     this.startCheckingForAddedGraphsPlaceholders = function () {
-        console.log('called: startCheckingForAddedGraphsPlaceholders() ' + this.counterNumx)
-        console.log('start----------------------')
-        console.log(this.listOfAllGraphElements)
-        console.log('end----------------------')
         this.remainingGraphsForAdding = JSON.parse(JSON.stringify(this.listOfAllGraphElements));
         this.graphsRenderedInterval = setInterval(this.checkForGraphsAddedToView, 300)
     }
     this.checkForGraphsAddedToView = function () {
-        console.log('called: checkForGraphsAddedToView() ' + this.counterNumx)
-        console.log('this.remainingGraphsForAdding.length ' + this.remainingGraphsForAdding.length)
         this.remainingGraphsForAdding.forEach(function (arrayItem, index, arrayObject) {
             if (document.getElementById(arrayItem.elementId)) {
                 this.attachGraphToPlaceholder(arrayItem);
                 this.remainingGraphsForAdding.splice(index, 1);
-                console.log('remainingGraphsForAdding spliced: ' + this.remainingGraphsForAdding.length)
             }
         }.bind(this));
-        console.log('this.remainingGraphsForAdding.length: ' + this.remainingGraphsForAdding.length);
         if (this.remainingGraphsForAdding.length < 1) {
             this.counterNumx++;
-            console.log('**************** interval graphs cleared ::' + this.counterNumx + ':: *************')
             clearInterval(this.graphsRenderedInterval);
         }
     }.bind(this);
@@ -1009,19 +997,19 @@ function DrawDiagrams() {
      */
     this.renderCurrentlyViewingDataTable = function () {
         return `<div class="c-custom-viewing-data-table"><table class="table table-sm">
-            <thead><tr><th colspan="2">Currently viewing data:</th></tr></thead>
+            <thead><tr><th colspan="2">Currently viewing data for contract:</th></tr></thead>
             <tbody>
                 <tr>
                     <td>MAC address:</td>
-                    <td>` + this.returnRandomNumberInRange(10, 300) + `</td>
+                    <td><b>` + selectedContractData.contractMacAddress + `</b></td>
                 </tr>
                 <tr>
                     <td>Contract ID:</td>
-                    <td>` + this.returnRandomNumberInRange(10, 300) + `</td>
+                    <td><b>` + selectedContractData.contractNumber + `</b></td>
                 </tr>
                 <tr>
                     <td>City:</td>
-                    <td>` + this.returnRandomNumberInRange(10, 300) + `</td>
+                    <td><b>` + selectedContractData.contractCity + `</b></td>
                 </tr>                                
             </tbody>
         </table></div>`;

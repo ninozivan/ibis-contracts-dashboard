@@ -37,6 +37,11 @@
     &:not(:last-child){
         margin-bottom: 5px;
     }
+    &.bg-dark{
+        .c-card-title{
+            color: @color-white;
+        }
+    }
     .card-body{
         padding: 1rem;
     }
@@ -52,6 +57,9 @@
     .c-small-text-for-cards{
         font-size: 16px;
         color: lighten(@color-navy-blue, 20%);
+        &.c-xs{
+            font-size: 12px;
+        }
     }
     .badge{
         font-size: 14px;
@@ -124,9 +132,14 @@
     background-color: @color-sidebar-back;
     color: @color-white;
     width: @var-sidebar-width;
+    text-align: center;
     @media only screen and (min-width: @var-breakpoint-start-lg)  {
         display: block;
-    }    
+    }
+    .fas{
+        font-size: 28px;
+        margin-top: 20px;
+    }
 }
 .c-main-content-wrap{
     @media only screen and (min-width: @var-breakpoint-start-lg)  {
@@ -169,7 +182,7 @@
 }
 .c-autocomplete-wrapper{
     position: relative;
-    display: inline-block;    
+    display: block;    
     .c-autocomplete-items{
         position: absolute;
         border: 1px solid #d4d4d4;
@@ -177,7 +190,7 @@
         border-top: none;
         z-index: 99;
         /*position the autocomplete items to be the same width as the container:*/
-        top: 100%;
+        top: 64%;
         left: 0;
         right: 0;
         > div{
@@ -215,6 +228,13 @@
                 font-size: 12px;
                 padding: 8px 10px;
             }
+        }
+    }
+}
+#cid-diagrams-content-placeholder{
+    > .col-12{
+        > .row{
+            margin-bottom: 0.25rem;
         }
     }
 }
