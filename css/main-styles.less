@@ -15,6 +15,23 @@
 @var-breakpoint-end-lg:1199px;
 @var-breakpoint-start-xlg:1200px;
 /* #endregion Custom Grid content */
+.daterangepicker{
+    .drp-calendar{
+        .calendar-table{
+            table{
+                tbody{
+                    tr{
+                        td{
+                            &.disabled{
+                                color: #f00 !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 ///
 .card{
     &:not(:last-child){
@@ -115,4 +132,89 @@
     @media only screen and (min-width: @var-breakpoint-start-lg)  {
         padding-left: @var-sidebar-width;
     }       
+}
+.c-contract-selection-filters{
+    display: none;
+    &.c-active{
+        display: block;
+    }
+}
+.c-custom-viewing-data-table{
+    display: inline-block;
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 4px 10px;
+    > table{
+        width: auto;
+        margin-bottom: 0;
+        > thead{
+            > tr{
+                > th{
+                    font-size: 11px;
+                    border-top: none;
+                }
+            }
+        }
+        > tbody{
+            > tr{
+                > td{
+                    font-size: 11px;
+                    &:last-child{
+                        padding-left: 4rem;
+                    }
+                }
+            }
+        }  
+    }  
+}
+.c-autocomplete-wrapper{
+    position: relative;
+    display: inline-block;    
+    .c-autocomplete-items{
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+        > div{
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff; 
+            border-bottom: 1px solid #d4d4d4;
+            &:hover{
+                /*when hovering an item:*/
+                background-color: #e9e9e9;                 
+            }
+            &.c-autocomplete-active{
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
+            }
+        }
+    }
+}
+#cid-daterange-picker{
+    font-size: 12px;
+    text-align: center;
+}
+#cid-hgw-info-toggle-button{
+    .fa-angle-up{display: none;}
+    &.active{
+        .fa-angle-down{display: none;}
+        .fa-angle-up{display: inline;}
+    }
+}
+#cid-hgw-info-content-placeholder{
+    .c-has-info-cards{
+        .card{
+            > .card-body{
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+        }
+    }
 }
