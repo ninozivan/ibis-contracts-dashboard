@@ -2,113 +2,167 @@
 //referencing AppSettings from 'js/AppSettings'
 //referencing DrawDiagrams from 'js/DrawDiagrams'
 function FilterActions() {
-    var selectedContractObj = null;
-    //
-    this.obj_diagramsDraw = null;//DrawDiagrams Object
-    this.el_placeholderForDiagrams = null;//html element that will containt diagrams (tables or graphs)
-    this.el_tabsLinks = null;//tabs elements (Table vs Graphs)
-    this.el_daysRangeButtons = null;//days range buttons (1 day vs 7 days)
-    this.el_contractSearchApplyBtn = null;//button for contract search
-    this.el_resetFiltersBtn = null;//button to reset filters
-    this.enum_currentLayoutType = null;//currently selected view type (Tables|Graphs)
-    this.el_currentlyViewingDataPlaceholder = null;
-    this.el_contractSearchForm = null;
-    this.el_macAddressInput = null;
-    this.el_hgwInfoToggleButton = null;
-    //
-    ////
-    this.sayHi = function () {
-        console.log('FilterActions says Hello!!!');
-    }
+    var selectedContractObj = null;//selected Contract from Filters
+    var obj_drawDiagrams = null;//DrawDiagrams Object defined
+    var el_placeholderForDiagrams = null;//html element that will containt diagrams (tables or graphs)
+    //contract search filter
+    var el_contractSearchForm = null;//search form
+    var el_macAddressInput = null;//MAC address input
+    var el_contractNumberInput = null;
+    var el_contractSearchApplyBtn = null;//button for contract search
+    var el_resetFiltersBtn = null;//button to reset filters
+    //tabs    
+    var el_tabsLinks = null;//tabs elements (Table vs Graphs)
+    var enum_currentLayoutType = null;//currently selected view type (Tables|Graphs)
+    //date filters
+    var el_daysRangeButtons = null;//days range buttons (1 day vs 7 days)
+    //currently viewing data (top left corner)
+    var el_currentlyViewingDataPlaceholder = null;
+    //HGw Info toggle button
+    var el_hgwInfoToggleButton = null;
     //
     ////Initialize FilterActions object and prepare methods and elements
     this.init = function () {
-        this.obj_diagramsDraw = new DrawDiagrams();//construct DrawDiagrams object
-        this.el_tabsLinks = document.getElementsByClassName("c-layout-type-tab-link");//get tabs elements
-        for (var i = 0; i < this.el_tabsLinks.length; i++) {//bind click events to tab elements
-            this.el_tabsLinks[i].addEventListener('click', this.toggleTableGraphView, false);
+        //construct DrawDiagrams object
+        obj_drawDiagrams = new DrawDiagrams();
+        //get element that will contain diagram content
+        el_placeholderForDiagrams = document.getElementById('cid-diagrams-content-placeholder');        
+        //get tabs elements
+        el_tabsLinks = document.getElementsByClassName("c-layout-type-tab-link");
+        for (var i = 0; i < el_tabsLinks.length; i++) {//bind click events to tab elements
+            el_tabsLinks[i].addEventListener('click', toggleTableGraphView, false);
         }
-        this.el_daysRangeButtons = document.getElementsByClassName("c-day-range-button");//get days range buttons
-        for (var i = 0; i < this.el_daysRangeButtons.length; i++) {//bind click events to button
-            this.el_daysRangeButtons[i].addEventListener('click', this.toggleDaysRangeView, false);
+        //get Day Range buttons (1 Day / 7 Days)
+        el_daysRangeButtons = document.getElementsByClassName("c-day-range-button");//get days range buttons
+        for (var i = 0; i < el_daysRangeButtons.length; i++) {//bind click events to button
+            el_daysRangeButtons[i].addEventListener('click', toggleDaysRangeView, false);
         }
-        this.el_placeholderForDiagrams = document.getElementById('cid-diagrams-content-placeholder');//get element that will contain diagram content
-        //this.el_contractSearchApplyBtn = document.getElementById('cid-contact-search-apply-button');//get button for contract search
-        //this.el_contractSearchApplyBtn.addEventListener('click', this.applyDataForSelectedContract, false);
-        this.el_resetFiltersBtn = document.getElementById('cid-btn-reset-filters');
-        this.el_resetFiltersBtn.addEventListener('click', this.resetAllFilters, false);
-        this.el_currentlyViewingDataPlaceholder = document.getElementById('cid-contract-current-data-placeholder');
-        this.el_contractSearchForm = document.getElementById('cid-contract-search-form');
-        this.el_contractSearchForm.addEventListener("submit", function(evt) {
+        //Contract Search Form
+        el_contractSearchForm = document.getElementById('cid-contract-search-form');//get contact search form
+        el_contractSearchForm.addEventListener("submit", function(evt) {
             evt.preventDefault();
-            evt.target.reset();
-            console.log('form submitted');
-            this.applyDataForSelectedContract();
-        }.bind(this), true);        
-        this.el_macAddressInput = document.getElementById('inputMacAddress');
-        this.el_macAddressInput.addEventListener("keyup", macAddressFormat, false);
-        //
-        this.el_hgwInfoToggleButton = document.getElementById('cid-hgw-info-toggle-button');
-        this.el_hgwInfoToggleButton.addEventListener('click', this.toggleHgwInfoContent, false);
-        console.log('start-renderDiagram:001')
-        this.renderDiagrams();//first render of diagram content (will be empty for the first time)
-        console.log('end-renderDiagram:001')
-    }
-    //
-    ///
-    this.applyDataForSelectedContract = function () {
-        document.getElementById('cid-contract-search-filters').classList.remove('c-active');
-        document.getElementById('cid-contract-daterange-filters').classList.add('c-active');
-        this.el_currentlyViewingDataPlaceholder.innerHTML = this.obj_diagramsDraw.renderCurrentlyViewingDataTable();        
-        this.enum_currentLayoutType = appSettings.layoutEnums.tables;
-        console.log('start-renderDiagram:002')
-        this.renderDiagrams();
-        console.log('end-renderDiagram:002')
-    }.bind(this)
-    //
-    ////Toggle Table vs Graphs view
-    this.toggleTableGraphView = function (event) {
-        for (var i = 0; i < this.el_tabsLinks.length; i++) {//remove active class from all tabs
-            this.el_tabsLinks[i].classList.remove('active');
-        }
-        event.target.classList.add('active');//add active class to clicked element
-        if (event.target.classList.contains("c-tables-link") && this.enum_currentLayoutType != appSettings.layoutEnums.tables) {
-            //if user clicked tables tab, render tables diagrams
-            this.enum_currentLayoutType = appSettings.layoutEnums.tables;
-            console.log('start-renderDiagram:003')
-            this.renderDiagrams();
-            console.log('end-renderDiagram:003')
-        } else if (event.target.classList.contains("c-graphs-link") && this.enum_currentLayoutType != appSettings.layoutEnums.graphs) {
-            //if user clicked graphs tab, render graphs
-            this.enum_currentLayoutType = appSettings.layoutEnums.graphs;
-            console.log('start-renderDiagram:004')
-            this.renderDiagrams();
-            console.log('end-renderDiagram:004')
-        }
-    }.bind(this);
-    //
-    ////Call fuction from DrawDiagrams object and place content on html
-    this.renderDiagrams = function () {
-        this.el_placeholderForDiagrams.innerHTML = this.obj_diagramsDraw.renderDiagrams(this.enum_currentLayoutType);
+            validateSearchFiltersForm();
+        }, false);
+        el_macAddressInput = document.getElementById('inputMacAddress');
+        el_macAddressInput.addEventListener("keyup", macAddressFormat, false);
+        el_macAddressInput.addEventListener('input', function(){ this.classList.remove('is-invalid') });
+        el_contractNumberInput = document.getElementById('inputContractId');
+        el_contractNumberInput.addEventListener('input', function(){ this.classList.remove('is-invalid') });
+        //Reset filters button
+        el_resetFiltersBtn = document.getElementById('cid-btn-reset-filters');
+        el_resetFiltersBtn.addEventListener('click', resetAllFilters, false);
+        //placeholder for small 'Currently Viewing data'
+        el_currentlyViewingDataPlaceholder = document.getElementById('cid-contract-current-data-placeholder');
+        //HGw Info toggle data
+        el_hgwInfoToggleButton = document.getElementById('cid-hgw-info-toggle-button');
+        el_hgwInfoToggleButton.style.display = 'none';
+        el_hgwInfoToggleButton.addEventListener('click', toggleHgwInfoContent, false);
+        //first render of diagram content (will be empty for the first time)
+        renderDiagrams();
     }
     //
     ////
-    this.resetAllFilters = function (event) {
-        document.getElementById('cid-contract-search-filters').classList.add('c-active');
-        document.getElementById('cid-contract-daterange-filters').classList.remove('c-active');
-        for (var i = 0; i < this.el_tabsLinks.length; i++) {//remove active class from all tabs
-            this.el_tabsLinks[i].classList.remove('active');
+    function validateSearchFiltersForm(){
+        var isFormValid = false;
+        var tempObjectToCompare = null;
+        el_macAddressInput.classList.remove('is-invalid');  
+        el_contractNumberInput.classList.remove('is-invalid');
+        var numX;
+        for (numX = 0; numX < AppData.listOfContracts.length; numX++){
+            if (AppData.listOfContracts[numX].contractNumber == el_contractNumberInput.value && AppData.listOfContracts[numX].contractMacAddress == el_macAddressInput.value){
+                selectedContractObj = AppData.listOfContracts[numX];
+                obj_drawDiagrams.updateChangeSelectedContractData(selectedContractObj);
+                isFormValid = true;
+                el_contractSearchForm.reset();
+                break;
+            }
+            if (AppData.listOfContracts[numX].contractNumber == el_contractNumberInput.value || AppData.listOfContracts[numX].contractMacAddress == el_macAddressInput.value){
+                tempObjectToCompare = AppData.listOfContracts[numX]
+            }           
+        }        
+        if (isFormValid === true){
+            //Change Filter view
+            toggleFiltersView();
+            //Render small Viewing Data content (top left)
+            el_currentlyViewingDataPlaceholder.innerHTML = obj_drawDiagrams.renderCurrentlyViewingDataTable();
+            //set Tab to Table
+            enum_currentLayoutType = appSettings.layoutEnums.tables;
+            //Render diagrams (in this case it will be Table, since we stated 'appSettings.layoutEnums.tables')
+            renderDiagrams();
+        }else if (tempObjectToCompare){//in case only one field is invalid
+            if (tempObjectToCompare.contractMacAddress != el_macAddressInput.value){
+                el_macAddressInput.classList.add('is-invalid');                  
+            }
+            if (tempObjectToCompare.contractNumber != el_contractNumberInput.value){
+                el_contractNumberInput.classList.add('is-invalid');                  
+            }
+        }else{//when both fields are invalid
+            el_macAddressInput.classList.add('is-invalid');  
+            el_contractNumberInput.classList.add('is-invalid');            
         }
-        this.enum_currentLayoutType = null;
-        console.log('start-renderDiagram:005')
-        this.renderDiagrams();
-        console.log('end-renderDiagram:005')
-    }.bind(this);
+    }
+    //
+    ////
+    function toggleFiltersView (){
+        if (document.getElementById('cid-contract-search-filters').classList.contains("c-active")) {
+            document.getElementById('cid-contract-search-filters').classList.remove('c-active');
+            document.getElementById('cid-contract-daterange-filters').classList.add('c-active');
+            el_tabsLinks[0].classList.add('active');//set tab for Table as active
+            el_tabsLinks[0].classList.remove('disabled');
+            el_tabsLinks[1].classList.remove('disabled');
+            el_hgwInfoToggleButton.style.display = 'inline-block';
+        } else {
+            document.getElementById('cid-contract-search-filters').classList.add('c-active');
+            document.getElementById('cid-contract-daterange-filters').classList.remove('c-active');
+            el_tabsLinks[0].classList.add('disabled');
+            el_tabsLinks[1].classList.add('disabled');
+        }        
+    }
+    //
+    ////Toggle Table vs Graphs view
+    function toggleTableGraphView (event) {
+        if (!selectedContractObj){
+            return;
+        }
+        for (var i = 0; i < el_tabsLinks.length; i++) {//remove active class from all tabs
+            el_tabsLinks[i].classList.remove('active');
+        }
+        event.target.classList.add('active');//add active class to clicked element
+        if (event.target.classList.contains("c-tables-link") && enum_currentLayoutType != appSettings.layoutEnums.tables) {
+            //if user clicked tables tab, render tables diagrams
+            enum_currentLayoutType = appSettings.layoutEnums.tables;
+            renderDiagrams();
+        } else if (event.target.classList.contains("c-graphs-link") && enum_currentLayoutType != appSettings.layoutEnums.graphs) {
+            //if user clicked graphs tab, render graphs
+            enum_currentLayoutType = appSettings.layoutEnums.graphs;
+            renderDiagrams();
+        }
+    };
+
+    //
+    ////Call fuction from DrawDiagrams object and place content on html
+    function renderDiagrams () {
+        el_placeholderForDiagrams.innerHTML = obj_drawDiagrams.renderDiagrams(enum_currentLayoutType);
+    }
+    //
+    ////
+    function resetAllFilters (event) {
+        toggleFiltersView();
+        for (var i = 0; i < el_tabsLinks.length; i++) {//remove active class from all tabs
+            el_tabsLinks[i].classList.remove('active');
+        }
+        enum_currentLayoutType = null;
+        selectedContractObj = null;
+        el_hgwInfoToggleButton.classList.remove('active');
+        el_hgwInfoToggleButton.style.display = 'none';
+        document.getElementById('cid-hgw-info-content-placeholder').innerHTML = '';
+        renderDiagrams();
+    };
     //
     ////
     this.datePicker_selectedDate = null;
     this.datePicker_sevenDaysRange = null;
-    this.datePicker_isSingleDayRangeSelected = false;
+    var datePicker_isSingleDayRangeSelected = false;
     $('#cid-daterange-picker').daterangepicker({
         startDate: moment(),
         endDate: moment(),
@@ -118,87 +172,48 @@ function FilterActions() {
         }
     });
     $('#cid-daterange-picker').on('apply.daterangepicker', function (ev, picker) {
-        // console.log(picker.startDate.format('YYYY-MM-DD'));
-        // console.log(picker.endDate.format('YYYY-MM-DD'));
         this.datePicker_selectedDate = picker.startDate.format('YYYY-MM-DD');
         this.datePicker_sevenDaysRange = moment(this.datePicker_selectedDate).subtract(7, 'days');
-        console.log('selected date is: ' + moment(this.datePicker_selectedDate).format('YYYY MM DD'));
-        console.log('7 days before selected date is: ' + moment(this.datePicker_sevenDaysRange).format('YYYY MM DD'));
     });
-    // $('#cid-daterange-picker').datepicker({
-    //     // uiLibrary: 'bootstrap4',
-    //     change: function (e) {
-    //         console.log('datepicker changed:' )
-    //         console.log(e);
-    //         this.datePicker_selectedDate = moment(new Date(e.target.value));
-    //         this.datePicker_sevenDaysRange = moment(this.datePicker_selectedDate).subtract(7, 'days');;
-    //         //var dateTimeString = moment(timeStampValue).format("DD-MM-YYYY HH:mm:ss");
-    //         console.log('selected date is: ' + moment(this.datePicker_selectedDate).format('YYYY MM DD') );
-    //         console.log('7 days before selected date is: ' + moment(this.datePicker_sevenDaysRange).format('YYYY MM DD') );
-
-    //     }        
-    // });
     //
     ////
-    this.toggleDaysRangeView = function (event) {
-        for (var i = 0; i < this.el_daysRangeButtons.length; i++) {//remove active class from all tabs
-            this.el_daysRangeButtons[i].classList.remove('btn-primary');
+    function toggleDaysRangeView (event) {
+        for (var i = 0; i < el_daysRangeButtons.length; i++) {//remove active class from all tabs
+            el_daysRangeButtons[i].classList.remove('btn-primary');
         }
         event.target.classList.add('btn-primary');//add active class to clicked element
         if (event.target.classList.contains("c-one-day")) {
             //if user clicked 1 Day button, render one day diagrams
-            //this.enum_currentLayoutType = appSettings.layoutEnums.tables;
-            this.datePicker_isSingleDayRangeSelected = true;
-            this.changeDatePickerLayout();
-            console.log('this.datePicker_selectedDate: ' + this.datePicker_selectedDate);
-            // var tempNewDate = moment(this.datePicker_selectedDate).format('DD/MM/YYYY');
-            // $('#cid-daterange-picker').data('daterangepicker').setStartDate(tempNewDate);
-            console.log('start-renderDiagram:006')
-            this.renderDiagrams();
-            console.log('end-renderDiagram:006')
+            datePicker_isSingleDayRangeSelected = true;
+            changeDatePickerLayout();
+            renderDiagrams();
         } else if (event.target.classList.contains("c-seven-days")) {
             //if user clicked 7 Days button, render diagrams for previous 7 days
-            //this.enum_currentLayoutType = appSettings.layoutEnums.graphs;
-            this.datePicker_isSingleDayRangeSelected = false;
-            this.changeDatePickerLayout();
-            console.log('this.datePicker_selectedDate: ' + this.datePicker_selectedDate);
-            // $('#cid-daterange-picker').data('daterangepicker').setStartDate(this.datePicker_selectedDate);
-            // $('#cid-daterange-picker').data('daterangepicker').setEndDate(this.datePicker_sevenDaysRange);
-            console.log('start-renderDiagram:007')
-            this.renderDiagrams();
-            console.log('end-renderDiagram:007')
+            datePicker_isSingleDayRangeSelected = false;
+            changeDatePickerLayout();
+            renderDiagrams();
         }
-    }.bind(this);
+    };
     //
     ////
-    this.changeDatePickerLayout = function () {
-        console.log($('#cid-daterange-picker').data('daterangepicker'))
-        console.log('singleDatePicker: ' + $('#cid-daterange-picker').data('daterangepicker').singleDatePicker)
-        $('#cid-daterange-picker').data('daterangepicker').singleDatePicker = this.datePicker_isSingleDayRangeSelected;
-        $('#cid-daterange-picker').data('daterangepicker').autoApply = this.datePicker_isSingleDayRangeSelected;
+    function changeDatePickerLayout () {
+        //when user selects 1 Day, we will set options to select only one date and close date picker
+        $('#cid-daterange-picker').data('daterangepicker').singleDatePicker = datePicker_isSingleDayRangeSelected;
+        $('#cid-daterange-picker').data('daterangepicker').autoApply = datePicker_isSingleDayRangeSelected;
     }
     //
     ////
-    //
-    ////
     function populateContractSearchForm (inputSelectedValue) {
-        console.log('populateContractSearchForm() inputSelectedValue: ' + inputSelectedValue);
         var matchingContractObj = AppData.listOfContracts.filter(function(obj){
             return obj.contractNumber == inputSelectedValue || obj.contractMacAddress == inputSelectedValue;
         });
         selectedContractObj = matchingContractObj[0];
-        console.log(matchingContractObj);
         if (inputSelectedValue === selectedContractObj.contractNumber){
             document.getElementById('inputMacAddress').value = selectedContractObj.contractMacAddress;
         }
         if (inputSelectedValue === selectedContractObj.contractMacAddress){
             document.getElementById('inputContractId').value = selectedContractObj.contractNumber;
-        }
-        console.log(selectedContractObj);
-        // AppData.listOfContracts.forEach(function (item, index, object) {
-        //     if 
-        //     dataToExport.push(newLabelObj);
-        // })        
+        }      
     }
     /* START
         MAC ADDRESS FORMAT                
@@ -319,13 +334,13 @@ function FilterActions() {
     autocomplete(document.getElementById("inputMacAddress"), tempArrayForAutocomplete_MacAddresses);
     //
     ////
-    this.toggleHgwInfoContent = function (event){
+    function toggleHgwInfoContent (event){
         if (event.target.classList.contains("active")){
             event.target.classList.remove('active');
             document.getElementById('cid-hgw-info-content-placeholder').innerHTML = '';
         }else{
             event.target.classList.add('active');
-            document.getElementById('cid-hgw-info-content-placeholder').innerHTML = this.obj_diagramsDraw.returnHgwInfoTable();
+            document.getElementById('cid-hgw-info-content-placeholder').innerHTML = obj_drawDiagrams.returnHgwInfoTable();
         }
-    }.bind(this);
+    };
 }
