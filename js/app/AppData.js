@@ -156,5 +156,419 @@ var AppData = {
                 firmware: '4.1.1004.0'
             }              
         }
+    ],
+    //list of data for Graphs charts (will be used in DrawDiagrams.js)
+    listOfGraphsData: [
+        {//first graph setup
+            chart: {
+                type: 'line'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'HGw status'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },            
+            yAxis: {
+                title: {
+                    text: 'GB'
+                }
+            },
+            series: [
+                {
+                    name: 'Data Transfered',
+                    color: '#8ef8ff'
+                }, 
+                {
+                    name: 'Total No. of Unifi clients',
+                    color: '#00c2e2'
+                }
+            ]
+        },
+        {//second graph setup
+            chart: {
+                type: 'area'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'HGw Values'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },           
+            yAxis: {
+                title: {
+                    text: 'GB'
+                }
+            },
+            series: [
+                {
+                    name: 'Good',
+                    color: '#20fc8f'
+                }, {
+                    name: 'Medium',
+                    color: '#ffa100'
+                }, {
+                    name: 'Bad',
+                    color: '#ff5b58'
+                }
+            ]
+        },
+        {//third graph setup
+            chart: {
+                type: 'column'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'HGw Interference'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },            
+            yAxis: {
+                title: {
+                    text: 'No. of clients'
+                }
+            },
+            series: [
+                {
+                    name: 'A',
+                    color: '#8ef8ff'
+                }, {
+                    name: 'B',
+                    color: '#00c2e2'
+                }, {
+                    name: 'C',
+                    color: '#006799'
+                }, {
+                    name: 'D',
+                    color: '#0088bc'
+                }
+            ]
+        },
+        {//fourth graph setup
+            chart: {
+                type: 'column'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'Total No. Of Interference Network'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },           
+            yAxis: {
+                title: {
+                    text: 'No. of clients'
+                }
+            },
+            series: [
+                {
+                    name: 'A',
+                    color: '#8ef8ff'
+                }, {
+                    name: 'B',
+                    color: '#00c2e2'
+                }, {
+                    name: 'C',
+                    color: '#006799'
+                }, {
+                    name: 'D',
+                    color: '#0088bc'
+                }
+            ]
+        },
+        {//fifth graph setup
+            chart: {
+                type: 'spline'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'HGw - RSS'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },             
+            yAxis: {
+                title: {
+                    text: 'dBm'
+                }
+            },
+            series: [
+                {
+                    name: 'Maximum',
+                    color: '#20fc8f'
+                }, {
+                    name: 'Average',
+                    color: '#ffa100'
+                }, {
+                    name: 'Minimum',
+                    color: '#ff5b58'
+                }
+            ]
+        },
+        {//sixth graph setup
+            chart: {
+                type: 'spline'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'HGw - Bit Rate'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },            
+            yAxis: {
+                title: {
+                    text: 'dBm'
+                }
+            },
+            series: [
+                {
+                    name: 'Maximum',
+                    color: '#20fc8f'
+                }, {
+                    name: 'Average',
+                    color: '#ffa100'
+                }, {
+                    name: 'Minimum',
+                    color: '#ff5b58'
+                }
+            ]
+        },
+        {//seventh graph setup
+            chart: {
+                type: 'area'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'HGw - Number of retransmissions'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },           
+            // yAxis: {
+            //     title: {
+            //         text: 'dBm'
+            //     }
+            // },
+            series: [
+                {
+                    name: 'Bytes',
+                    color: '#0088bc'
+                }, {
+                    name: 'Retransmitted Bytes',
+                    color: '#00c2e2'
+                }
+            ]
+        },
+        {//eight graph setup
+            chart: {
+                type: 'line'
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },
+            title: {
+                text: 'HGw - Number of clients'
+            },
+            tooltip: {
+                formatter: function () {
+                    return 'The value for <b>' + this.x +
+                        '</b> is <b>' + this.y + '</b>';
+                }
+            },                      
+            xAxis: {
+                labels: {
+                    formatter: function(){
+                      return moment(new Date(this.value)).format("ddd, hA"); // example for moment.js date library
+                      //return this.value;
+                    }
+                }
+            },            
+            yAxis: {
+                title: {
+                    text: 'No. of clients'
+                }
+            },
+            series: [
+                {
+                    name: '',
+                    color: '#c3fafe'
+                }
+            ]
+        }          
     ]
 }

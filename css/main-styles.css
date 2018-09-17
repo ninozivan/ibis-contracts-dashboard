@@ -1,9 +1,6 @@
 /* COLORS */
 /* #region Custom Grid content */
 /* #endregion Custom Grid content */
-.daterangepicker .drp-calendar .calendar-table table tbody tr td.disabled {
-  color: #f00 !important;
-}
 .card:not(:last-child) {
   margin-bottom: 5px;
 }

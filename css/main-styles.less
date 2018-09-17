@@ -15,24 +15,7 @@
 @var-breakpoint-end-lg:1199px;
 @var-breakpoint-start-xlg:1200px;
 /* #endregion Custom Grid content */
-.daterangepicker{
-    .drp-calendar{
-        .calendar-table{
-            table{
-                tbody{
-                    tr{
-                        td{
-                            &.disabled{
-                                color: #f00 !important;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-///
+///override Bootstrap settings
 .card{
     &:not(:last-child){
         margin-bottom: 5px;
@@ -122,6 +105,7 @@
         }        
     }
 }
+//left sidebar
 .c-main-sidebar-wrap{
     display: none;
     position: fixed;
@@ -141,17 +125,20 @@
         margin-top: 20px;
     }
 }
+//main content that will hold entire diagrams
 .c-main-content-wrap{
     @media only screen and (min-width: @var-breakpoint-start-lg)  {
         padding-left: @var-sidebar-width;
     }       
 }
+//display settings for different Search Filters steps
 .c-contract-selection-filters{
     display: none;
     &.c-active{
         display: block;
     }
 }
+//custom table for displaying data
 .c-custom-viewing-data-table{
     display: inline-block;
     border: 1px solid gray;
@@ -180,6 +167,7 @@
         }  
     }  
 }
+//styles for autocomplete component
 .c-autocomplete-wrapper{
     position: relative;
     display: block;    
@@ -210,10 +198,12 @@
         }
     }
 }
+//daterange picker styles
 #cid-daterange-picker{
     font-size: 12px;
     text-align: center;
 }
+//button for toggling HGw Info
 #cid-hgw-info-toggle-button{
     .fa-angle-up{display: none;}
     &.active{
@@ -221,6 +211,7 @@
         .fa-angle-up{display: inline;}
     }
 }
+//HGw Info container (top left corner)
 #cid-hgw-info-content-placeholder{
     .c-has-info-cards{
         .card{
@@ -231,6 +222,7 @@
         }
     }
 }
+//margins for diagrams content
 #cid-diagrams-content-placeholder{
     > .col-12{
         > .row{
