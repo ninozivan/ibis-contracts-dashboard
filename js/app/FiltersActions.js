@@ -25,6 +25,7 @@ function FilterActions() {
     this.init = function () {
         //construct DrawDiagrams object
         obj_drawDiagrams = new DrawDiagrams();
+        obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd);
         //get element that will contain diagram content
         el_placeholderForDiagrams = document.getElementById('cid-diagrams-content-placeholder');        
         //get tabs elements
@@ -57,6 +58,7 @@ function FilterActions() {
         el_hgwInfoToggleButton = document.getElementById('cid-hgw-info-toggle-button');
         el_hgwInfoToggleButton.style.display = 'none';
         el_hgwInfoToggleButton.addEventListener('click', toggleHgwInfoContent, false);
+        ///
         //first render of diagram content (will be empty for the first time)
         renderDiagrams();
     }
@@ -160,13 +162,13 @@ function FilterActions() {
     };
     //
     ////
-    var datePicker_dateStart = null;
-    var datePicker_dateEnd = null;
+    var datePicker_dateStart = moment().subtract(1, 'days');
+    var datePicker_dateEnd = moment();
     var datePicker_isSingleDayRangeSelected = false;
     //Define Daterange picker
     $('#cid-daterange-picker').daterangepicker({
         opens: 'center',
-        startDate: moment(),
+        startDate: moment().subtract(1, 'days'),
         endDate: moment(),
         locale: {
             format: 'DD.MM.YYYY'
@@ -174,7 +176,8 @@ function FilterActions() {
       }, function(start, end, label) {
         datePicker_dateStart = start;
         datePicker_dateEnd = end;
-        obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd, 'range');
+        obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd);
+        renderDiagrams();
       });
     //
     ////
@@ -186,12 +189,12 @@ function FilterActions() {
         if (event.target.classList.contains("c-one-day")) {
             //if user clicked 1 Day button, render one day diagrams
             datePicker_isSingleDayRangeSelected = true;
-            obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd, 'minus-one-day');
+            obj_drawDiagrams.updateDatepickerValue(moment().subtract(1, 'days'), moment());
             renderDiagrams();
         } else if (event.target.classList.contains("c-seven-days")) {
             //if user clicked 7 Days button, render diagrams for previous 7 days
             datePicker_isSingleDayRangeSelected = false;
-            obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd, 'minus-seven-day');
+            obj_drawDiagrams.updateDatepickerValue(moment().subtract(7, 'days'), moment());
             renderDiagrams();
         }
     };
