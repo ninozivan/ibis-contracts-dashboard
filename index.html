@@ -6,17 +6,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Contracts Dashboard | Ibis Instruments</title>
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" type="image/ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="manifest" href="favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="favicons/ms-icon-144x144.png">
+    <!-- Theme Color for Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#ff8000">    
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Datepicker -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.min.css" />
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW"
-        crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="css/solid.min.css">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
     <!-- Custom Styles -->
     <link rel="stylesheet" href="css/main-styles.css">
 </head>
@@ -70,10 +86,9 @@
                     </div>
                     <div class="col-12 col-md-4 text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-default btn-primary pl-5 pr-5 c-day-range-button c-one-day">1
-                                Day
+                            <button type="button" class="btn btn-default btn-primary pl-5 pr-5 c-day-range-button c-one-day">1 Day ago
                             </button>
-                            <button type="button" class="btn btn-default pl-5 pr-5 c-day-range-button c-seven-days">7 Days</button>
+                            <button type="button" class="btn btn-default pl-5 pr-5 c-day-range-button c-seven-days">7 Days ago</button>
                         </div>
                         <div class="pt-2">
                             <input type="text" id="cid-daterange-picker" name="daterange" placeholder="Select Date" value="01/01/2018 - 01/15/2018" />
@@ -114,26 +129,23 @@
     </main>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+    <script src="js/jquery-3.3.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <!-- Date Picker -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> -->
+    <script type="text/javascript" src="js/datepicker/moment.min.js"></script>
+    <script type="text/javascript" src="js/datepicker/daterangepicker.min.js"></script>
     <!-- HighCharts Resources -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="js/highcharts/highcharts.js"></script>
+    <script src="js/highcharts/exporting.js"></script>
+    <script src="js/highcharts/export-data.js"></script>
     <!-- Custom Logic -->
-    <script src="js/AppData.js"></script>
-    <script src="js/AppSettings.js"></script>
-    <script src="js/DrawDiagrams.js"></script>
-    <script src="js/FiltersActions.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/app/AppData.js"></script>
+    <script src="js/app/AppSettings.js"></script>
+    <script src="js/app/DrawDiagrams.js"></script>
+    <script src="js/app/FiltersActions.js"></script>
+    <script src="js/app/main.js"></script>
 </body>
 
 </html>

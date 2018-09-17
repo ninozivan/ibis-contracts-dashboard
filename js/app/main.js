@@ -5,8 +5,4 @@ document.addEventListener("DOMContentLoaded", function(){
     // Test Code
     var obj_filterActions = new FilterActions();
     obj_filterActions.init();
-    //Toggle view Tables vs Graphs
-    function toggleTabView(){
-        console.log('clicked tabs');
-    }
 });
