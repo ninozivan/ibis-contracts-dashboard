@@ -2,8 +2,13 @@
 //referencing AppSettings from 'js/AppSettings'
 function DrawDiagrams() {
     var selectedContractData = null;//selected contract from list of all Contracts (AppData.listOfContracts..)
+    //update selected Contract data when user searches for new Contract with Filters
     this.updateChangeSelectedContractData = function (inputNewData){
         selectedContractData = inputNewData
+    }
+    //update date range when user selects from datepicker
+    this.updateDatepickerValue = function (inputDate_start, inputDate_end, inputRange_type){
+        console.log('updateDatepickerValue: ' + inputNewValue);
     }
     //
     this.renderDiagrams = function (layoutType) {

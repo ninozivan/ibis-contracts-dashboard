@@ -160,21 +160,22 @@ function FilterActions() {
     };
     //
     ////
-    this.datePicker_selectedDate = null;
-    this.datePicker_sevenDaysRange = null;
+    var datePicker_dateStart = null;
+    var datePicker_dateEnd = null;
     var datePicker_isSingleDayRangeSelected = false;
+    //Define Daterange picker
     $('#cid-daterange-picker').daterangepicker({
+        opens: 'center',
         startDate: moment(),
         endDate: moment(),
-        opens: 'center',
-        maxSpan: {
-            "days": 7
-        }
-    });
-    $('#cid-daterange-picker').on('apply.daterangepicker', function (ev, picker) {
-        this.datePicker_selectedDate = picker.startDate.format('YYYY-MM-DD');
-        this.datePicker_sevenDaysRange = moment(this.datePicker_selectedDate).subtract(7, 'days');
-    });
+        locale: {
+            format: 'DD.MM.YYYY'
+        }    
+      }, function(start, end, label) {
+        datePicker_dateStart = start;
+        datePicker_dateEnd = end;
+        obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd, 'range');
+      });
     //
     ////
     function toggleDaysRangeView (event) {
@@ -185,22 +186,15 @@ function FilterActions() {
         if (event.target.classList.contains("c-one-day")) {
             //if user clicked 1 Day button, render one day diagrams
             datePicker_isSingleDayRangeSelected = true;
-            changeDatePickerLayout();
+            obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd, 'minus-one-day');
             renderDiagrams();
         } else if (event.target.classList.contains("c-seven-days")) {
             //if user clicked 7 Days button, render diagrams for previous 7 days
             datePicker_isSingleDayRangeSelected = false;
-            changeDatePickerLayout();
+            obj_drawDiagrams.updateDatepickerValue(datePicker_dateStart, datePicker_dateEnd, 'minus-seven-day');
             renderDiagrams();
         }
     };
-    //
-    ////
-    function changeDatePickerLayout () {
-        //when user selects 1 Day, we will set options to select only one date and close date picker
-        $('#cid-daterange-picker').data('daterangepicker').singleDatePicker = datePicker_isSingleDayRangeSelected;
-        $('#cid-daterange-picker').data('daterangepicker').autoApply = datePicker_isSingleDayRangeSelected;
-    }
     //
     ////
     function populateContractSearchForm (inputSelectedValue) {
