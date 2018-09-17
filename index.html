@@ -9,6 +9,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <!-- Datepicker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7" crossorigin="anonymous">
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="css/main-styles.css">
 </head>
 
@@ -21,43 +28,50 @@
         <div class="container-fluid">
             <!-- Title -->
             <div class="row">
-                <div class="col">
-                    <h1>Report</h1>
+                <div class="col pt-2">
+                    <h2>Report</h2>
+                    <hr/>
                 </div>
             </div>
             <!-- Filter Options (Search Form) -->
-            <div class="row">
-                <div class="col">
-                    <form class="form-inline">
-                        <div class="form-group mb-2">
-                            <input type="text" class="form-control" id="inputMacAddress" placeholder="Mac: address">
-                        </div>
-                        <div class="form-group mx-sm-3 mb-2">
-                            <input type="text" class="form-control" id="inputContractId" placeholder="Contract ID">
-                        </div>
-                        <button type="submit" class="btn btn-primary mb-2">Apply filters</button>
-                    </form>
+            <div class="c-contract-selection-filters c-active" id="cid-contract-search-filters">
+                <div class="row">
+                    <div class="col">
+                        <form class="form-inline" autocomplete="off" id="cid-contract-search-form">
+                            <div class="form-group mb-2">
+                                <div class="c-autocomplete-wrapper">
+                                    <input type="text" class="form-control" id="inputMacAddress" name="inputMacAddress" placeholder="Mac: address" maxlength="17">
+                                </div>
+                            </div>
+                            <div class="form-group mx-sm-3 mb-2">
+                                <div class="c-autocomplete-wrapper">
+                                    <input type="text" class="form-control" id="inputContractId" name="inputContractId" placeholder="Contract ID">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2" id="cid-contact-search-apply-button"><i class="fas fa-sync-alt"></i> Apply filters</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             <!-- Filter Options (Search Results) -->
-            <div class="row">
-                <div class="col">
-                    <p>Currently viewing data:</p>
-                    <p>MAC address: AA.BB.CC.DD.AE</p>
-                    <p>Contact ID: 3141592654</p>
-                    <p>City: Budapest</p>
-                </div>
-                <div class="col text-center">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-secondary">1 Day</button>
-                        <button type="button" class="btn btn-secondary">7 Days</button>
+            <div class="c-contract-selection-filters" id="cid-contract-daterange-filters">
+                <div class="row">
+                    <div class="col-12 col-md-4 text-center text-md-left">
+                        <div id="cid-contract-current-data-placeholder"></div>
                     </div>
-                    <div>
-                        < 17.06.2018. - 18.06.2018.>
+                    <div class="col-12 col-md-4 text-center">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-default btn-primary pl-5 pr-5 c-day-range-button c-one-day">1 Day</button>
+                            <button type="button" class="btn btn-default pl-5 pr-5 c-day-range-button c-seven-days">7 Days</button>
+                        </div>
+                        <div class="pt-2">
+                            <input type="text" id="cid-daterange-picker" name="daterange" placeholder="Select Date" value="01/01/2018 - 01/15/2018" />
+                            <!-- <div id="cid-daterange-picker">placeholder</div> -->
+                        </div>
                     </div>
-                </div>
-                <div class="col text-right">
-                    <button type="button" class="btn btn-default" id="cid-btn-reset-filters">Reset filters</button>
+                    <div class="col-12 col-md-4 pt-3 pt-md-0 text-center text-md-right">
+                        <button type="button" class="btn btn-info" id="cid-btn-reset-filters"><i class="fas fa-sliders-h"></i> Reset filters</button>
+                    </div>
                 </div>
             </div>
             <!-- Tabs -->
@@ -65,10 +79,10 @@
                 <div class="col text-center">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a class="c-layout-type-tab-link c-tables-link nav-link" href="#">Tables</a>
+                            <a class="nav-link disabled c-layout-type-tab-link c-tables-link" href="#">Tables</a>
                         </li>
                         <li class="nav-item">
-                            <a class="c-layout-type-tab-link c-graphs-link nav-link" href="#">Graphs</a>
+                            <a class="nav-link disabled c-layout-type-tab-link c-graphs-link" href="#">Graphs</a>
                         </li>
                     </ul>
                 </div>
@@ -77,7 +91,8 @@
         <!-- Bottom Content (Graphs) -->
         <div class="container-fluid">
             <div class="row">
-                <div class="col text-right"><button type="button" class="btn btn-default">HGw Info</button></div>
+                <div class="col-12 text-right p-3"><button type="button" class="btn btn-primary btn-sm" id="cid-hgw-info-toggle-button"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> HGw Info</button></div>
+                <div class="col-12" id="cid-hgw-info-content-placeholder"></div>
             </div>
             <!-- Graphs -->
             <div class="row" id="cid-diagrams-content-placeholder">
@@ -93,8 +108,14 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
-    <!-- AmCharts Resources -->
+    <!-- Date Picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <!-- HighCharts Resources -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <!-- Custom Logic -->
     <script src="js/AppData.js"></script>
     <script src="js/AppSettings.js"></script>

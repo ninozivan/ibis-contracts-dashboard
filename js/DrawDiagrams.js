@@ -14,7 +14,7 @@ function DrawDiagrams() {
         } else if (layoutType === appSettings.layoutEnums.graphs) {
             return this.createContentForGraphs();
         } else {
-            return '<div>Northing to show :-(</div>'
+            return '<div class="col-12"><div class="card bg-light"><div class="card-body text-center">Start typing Contract ID or Mac Address to show data.</div></div></div>'
         }
     }
     /*
@@ -22,6 +22,7 @@ function DrawDiagrams() {
         LOGIC FOR DRAWING TABLES
      */
     this.createContentForTables = function () {
+        this.resetTableValuesBeforeRendering();
         var content_firstColumn =
             `<div class="col-12 col-lg-6 col-xl-3">
                 <div class="card"><div class="card-body"><span class="c-card-title">Overall Status</span>` + this.returnRandomBMGBadge() + `</div></div>
@@ -76,44 +77,55 @@ function DrawDiagrams() {
                 <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference network RSS</span>` + this.returnKpiTable('RSS [dBm]', false) + `</div></div>
             </div>`;
         var content_thirdColumn =
-            `<div class="col-12 col-lg-6 col-xl-4">
+            `<div class="col-12 col-lg-6 col-xl-3">
                 <div class="row">
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12">
                         <div class="card"><div class="card-body"><span class="c-card-title">WiFi connected time</span>` + this.returnPieChartPlaceholder(['Percent of time with connected user (s)']) + `</div></div>
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Channel</span>` + this.returnPieChartPlaceholder(['Auto: Yes', 'Auto: No']) + `</div></div>
-                    </div>                                   
+                    </div>                                 
                 </div>
                 <div class="row">
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12">
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Channel</span>` + this.returnPieChartPlaceholder(['Auto: Yes', 'Auto: No']) + `</div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <div class="card"><div class="card-body"><span class="c-card-title">HGw WiFi Usage</span>` + this.returnPieChartPlaceholder(['Low', 'Medium', 'High']) + `</div></div>
                     </div>
-                    <div class="col-12 col-lg-6">
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <div class="card"><div class="card-body"><span class="c-card-title">HGw Percent of time with Sticky Clients</span>` + this.returnPieChartPlaceholder(['Percent of time with sticky clients']) + `</div></div>
                     </div>                   
                 </div>
+            </div>`;
+        var content_fourthColumn =
+            `<div class="col-12 col-lg-6 col-xl-3">
                 <div class="row">
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12">
                         <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference</span>` + this.returnPieChartPlaceholder(['Low', 'Medium', 'High']) + `</div></div>
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Client's RSS Status</span>` + this.returnPieChartPlaceholder(['Good', 'Medium', 'Bad']) + `</div></div>
-                    </div>                  
+                    </div>                
                 </div>
                 <div class="row">
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12">
+                        <div class="card"><div class="card-body"><span class="c-card-title">HGw Client's RSS Status</span>` + this.returnPieChartPlaceholder(['Good', 'Medium', 'Bad']) + `</div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <div class="card"><div class="card-body"><span class="c-card-title">HGw Interference Home</span>` + this.returnPieChartPlaceholder(['Low', 'Medium', 'High']) + `</div></div>
                     </div>
-                    <div class="col-12 col-lg-6">
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <div class="card"><div class="card-body"><span class="c-card-title">HGw RSS Status</span>` + this.returnPieChartPlaceholder(['Good', 'Medium', 'Bad']) + `</div></div>
                     </div>                  
                 </div>
-            </div>`;
-        var content_fourthColumn =
-            `<div class="col-12 col-lg-6 col-xl-2">
-                <div class="card"><div class="card-body">` + this.returnHgwInfoTable() + `</div></div>
-            </div>`;
+            </div>`;           
+        // var content_fourthColumn =
+        //     `<div class="col-12 col-lg-6 col-xl-2 order-last">
+        //         <div class="card"><div class="card-body">` + this.returnHgwInfoTable() + `</div></div>
+        //     </div>`;
         /*  since we created placeholder containers (this.returnPieChartPlaceholder), we will start checking when those elements are added to DOM
             we want to attach PieChart graphs when those elements are added to DOM
          */
@@ -268,6 +280,7 @@ function DrawDiagrams() {
         this.pieRenderedInterval = setInterval(this.checkForPieChartsAddedToView, 300)
     }
     this.checkForPieChartsAddedToView = function () {
+        console.log('called: checkForPieChartsAddedToView() ')
         this.remainingPieChartsForAdding.forEach(function (arrayItem, index, arrayObject) {
             if (document.getElementById(arrayItem.elementId)) {
                 this.attachPieChartToPlaceholder(arrayItem);
@@ -281,56 +294,101 @@ function DrawDiagrams() {
     }.bind(this);
     ////
     this.returnHgwInfoTable = function () {
-        var tableTemplate = `<div class="table-responsive c-hgw-info-table"><table class="table table-sm">
-            <thead>
-                <tr>
-                    <th colspan="2">HGw Info</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>WiFi enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.wifiEnabled + `</td></tr>
-                <tr><td>HGw standard:</td><td>`+ this.selectedClientData.contractHgwInfo.hgwStandard + `</td></tr>
-                <tr><td>IP address:</td><td>`+ this.selectedClientData.contractHgwInfo.ipAddress + `</td></tr>
-                <tr><td>MAC:</td><td>`+ this.selectedClientData.contractMacAddress + `</td></tr>
-                <tr><td>Contract No:</td><td>`+ this.selectedClientData.contractNumber + `</td></tr>
-                <tr><td>Auto channel enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.autoChannelEnabled + `</td></tr>
-                <tr><td>SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.ssid + `</td></tr>
-                <tr><td>Security:</td><td>`+ this.selectedClientData.contractHgwInfo.security + `</td></tr>
-                <tr><td>Band:</td><td>`+ this.selectedClientData.contractHgwInfo.band + `</td></tr>
-                <tr><td>Hidden SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.hiddenSsid + `</td></tr>
-                <tr><td>Bandwith:</td><td>`+ this.selectedClientData.contractHgwInfo.bandwith + `</td></tr>
-                <tr><td>Up time:</td><td>`+ this.selectedClientData.contractHgwInfo.upTime + `</td></tr>
-                <tr><td>Equipment:</td><td>`+ this.selectedClientData.contractHgwInfo.equipment + `</td></tr>
-                <tr><td>Description:</td><td>`+ this.selectedClientData.contractHgwInfo.description + `</td></tr>
-                <tr><td>CMTS ID:</td><td>`+ this.selectedClientData.contractHgwInfo.cmtsId + `</td></tr>
-                <tr><td>Firmware:</td><td>`+ this.selectedClientData.contractHgwInfo.Firmware + `</td></tr>
-            </tbody>
-        </table></div>`
-        return tableTemplate;
+        var tableTemplate = `<div class="card mb-3"><div class="card-body">
+            <div class="row"><div class="col-12 text-center pb-3"><span class="c-card-title">HGw Info</span></div></div>
+            <div class="row c-has-info-cards">
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">WiFi enabled: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.wifiEnabled + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">HGw standard: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.hgwStandard + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">IP address: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.ipAddress + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">MAC: <span class="float-right">`+ this.selectedClientData.contractMacAddress + `</span></div></div></div>
+            </div>
+            <div class="row c-has-info-cards">
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Contract No: <span class="float-right">`+ this.selectedClientData.contractNumber + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Auto channel enabled: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.autoChannelEnabled + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">SSID: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.ssid + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Security: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.security + `</span></div></div></div>
+            </div>
+            <div class="row c-has-info-cards">
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Band: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.band + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Hidden SSID: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.hiddenSsid + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Bandwith: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.bandwith + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Up time: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.upTime + `</span></div></div></div>
+            </div>
+            <div class="row c-has-info-cards">
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Equipment: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.equipment + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Description: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.description + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">CMTS ID: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.cmtsId + `</span></div></div></div>
+                <div class="col-12 col-sm-6 col-md-3"><div class="card"><div class="card-body">Firmware: <span class="float-right">`+ this.selectedClientData.contractHgwInfo.cmtsId + `</span></div></div></div>
+            </div>            
+        </div></div>`
+        return tableTemplate;        
+        // var tableTemplate = `<div class="card"><div class="card-body"><div class="table-responsive c-hgw-info-table"><table class="table table-sm">
+        //     <thead>
+        //         <tr>
+        //             <th colspan="2">HGw Info</th>
+        //             <th></th>
+        //         </tr>
+        //     </thead>
+        //     <tbody>
+        //         <tr><td>WiFi enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.wifiEnabled + `</td></tr>
+        //         <tr><td>HGw standard:</td><td>`+ this.selectedClientData.contractHgwInfo.hgwStandard + `</td></tr>
+        //         <tr><td>IP address:</td><td>`+ this.selectedClientData.contractHgwInfo.ipAddress + `</td></tr>
+        //         <tr><td>MAC:</td><td>`+ this.selectedClientData.contractMacAddress + `</td></tr>
+        //         <tr><td>Contract No:</td><td>`+ this.selectedClientData.contractNumber + `</td></tr>
+        //         <tr><td>Auto channel enabled:</td><td>`+ this.selectedClientData.contractHgwInfo.autoChannelEnabled + `</td></tr>
+        //         <tr><td>SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.ssid + `</td></tr>
+        //         <tr><td>Security:</td><td>`+ this.selectedClientData.contractHgwInfo.security + `</td></tr>
+        //         <tr><td>Band:</td><td>`+ this.selectedClientData.contractHgwInfo.band + `</td></tr>
+        //         <tr><td>Hidden SSID:</td><td>`+ this.selectedClientData.contractHgwInfo.hiddenSsid + `</td></tr>
+        //         <tr><td>Bandwith:</td><td>`+ this.selectedClientData.contractHgwInfo.bandwith + `</td></tr>
+        //         <tr><td>Up time:</td><td>`+ this.selectedClientData.contractHgwInfo.upTime + `</td></tr>
+        //         <tr><td>Equipment:</td><td>`+ this.selectedClientData.contractHgwInfo.equipment + `</td></tr>
+        //         <tr><td>Description:</td><td>`+ this.selectedClientData.contractHgwInfo.description + `</td></tr>
+        //         <tr><td>CMTS ID:</td><td>`+ this.selectedClientData.contractHgwInfo.cmtsId + `</td></tr>
+        //         <tr><td>Firmware:</td><td>`+ this.selectedClientData.contractHgwInfo.Firmware + `</td></tr>
+        //     </tbody>
+        // </table></div></div></div>`
+        // return tableTemplate;
     }
+    this.resetTableValuesBeforeRendering = function (){
+        this.listOfAllPieChartElements = [];
+        this.remainingPieChartsForAdding = [];
+        clearInterval(this.pieRenderedInterval);
+        this.pieRenderedInterval = null;
+    }      
     /*
         START
         LOGIC FOR DRAWING GRAPHS 
      */
     this.createContentForGraphs = function () {
+        this.resetGraphValuesBeforeRendering();
         //first graph data
         var data_firstGraph = {
             chart: {
                 type: 'line'
             },
-            title: {
-                text: 'Monthly Average Temperature'
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
             },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
+            title: {
+                text: 'HGw status'
             },
             xAxis: {
                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             },
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: 'GB'
                 }
             },
             plotOptions: {
@@ -342,10 +400,10 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'Tokyo',
+                name: 'Data Transfered',
                 data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
             }, {
-                name: 'London',
+                name: 'Total No. of Unifi clients',
                 data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
             }]
         }
@@ -359,11 +417,21 @@ function DrawDiagrams() {
             chart: {
                 type: 'area'
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },            
             title: {
-                text: 'Historic and Estimated Worldwide Population Growth by Region'
-            },
-            subtitle: {
-                text: 'Source: Wikipedia.org'
+                text: 'HGw Values'
             },
             xAxis: {
                 categories: ['1750', '1800', '1850', '1900', '1950', '1999', '2050'],
@@ -374,17 +442,13 @@ function DrawDiagrams() {
             },
             yAxis: {
                 title: {
-                    text: 'Billions'
+                    text: 'GB'
                 },
                 labels: {
                     formatter: function () {
                         return this.value / 1000;
                     }
                 }
-            },
-            tooltip: {
-                split: true,
-                valueSuffix: ' millions'
             },
             plotOptions: {
                 area: {
@@ -398,20 +462,17 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'Asia',
+                name: 'Good',
+                color: '#20fc8f',
                 data: [502, 635, 809, 947, 1402, 3634, 5268]
             }, {
-                name: 'Africa',
+                name: 'Medium',
+                color: '#ffa100',
                 data: [106, 107, 111, 133, 221, 767, 1766]
             }, {
-                name: 'Europe',
+                name: 'Bad',
+                color: '#ff5b58',
                 data: [163, 203, 276, 408, 547, 729, 628]
-            }, {
-                name: 'America',
-                data: [18, 31, 54, 156, 339, 818, 1201]
-            }, {
-                name: 'Oceania',
-                data: [2, 2, 2, 6, 13, 30, 46]
             }]
         }
         //second graph template
@@ -424,42 +485,45 @@ function DrawDiagrams() {
             chart: {
                 type: 'column'
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },             
             title: {
-                text: 'Monthly Average Rainfall'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
+                text: 'HGw Interference'
             },
             xAxis: {
                 categories: [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec'
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                    '6',
+                    '7',
+                    '8',
+                    '9',
+                    '10',
+                    '11',
+                    '12',
+                    '13'
                 ],
                 crosshair: true
             },
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Rainfall (mm)'
+                    text: 'No. of clients'
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
             },
             plotOptions: {
                 column: {
@@ -468,19 +532,23 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'Tokyo',
+                name: 'A',
+                color: '#8ef8ff',
                 data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
         
             }, {
-                name: 'New York',
+                name: 'B',
+                color: '#00c2e2',
                 data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
         
             }, {
-                name: 'London',
+                name: 'C',
+                color: '#006799',
                 data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
         
             }, {
-                name: 'Berlin',
+                name: 'D',
+                color: '#0088bc',
                 data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
         
             }]
@@ -495,42 +563,45 @@ function DrawDiagrams() {
             chart: {
                 type: 'column'
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },             
             title: {
-                text: 'Monthly Average Rainfall'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
+                text: 'Total No. Of Interference Network'
             },
             xAxis: {
                 categories: [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec'
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                    '6',
+                    '7',
+                    '8',
+                    '9',
+                    '10',
+                    '11',
+                    '12',
+                    '13'
                 ],
                 crosshair: true
             },
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Rainfall (mm)'
+                    text: 'No. of clients'
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
             },
             plotOptions: {
                 column: {
@@ -539,19 +610,23 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'Tokyo',
+                name: 'A',
+                color: '#8ef8ff',
                 data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
         
             }, {
-                name: 'New York',
+                name: 'B',
+                color: '#00c2e2',
                 data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
         
             }, {
-                name: 'London',
+                name: 'C',
+                color: '#006799',
                 data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
         
             }, {
-                name: 'Berlin',
+                name: 'D',
+                color: '#0088bc',
                 data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
         
             }]
@@ -570,99 +645,30 @@ function DrawDiagrams() {
                     scrollPositionX: 1
                 }
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },             
             title: {
-                text: 'Wind speed during two days'
-            },
-            subtitle: {
-                text: '13th & 14th of February, 2018 at two locations in Vik i Sogn, Norway'
+                text: 'HGw - RSS'
             },
             xAxis: {
                 type: 'datetime',
-                labels: {
-                    overflow: 'justify'
-                }
+                crosshair: true
             },
             yAxis: {
                 title: {
-                    text: 'Wind speed (m/s)'
-                },
-                minorGridLineWidth: 0,
-                gridLineWidth: 0,
-                alternateGridColor: null,
-                plotBands: [{ // Light air
-                    from: 0.3,
-                    to: 1.5,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'Light air',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Light breeze
-                    from: 1.5,
-                    to: 3.3,
-                    color: 'rgba(0, 0, 0, 0)',
-                    label: {
-                        text: 'Light breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Gentle breeze
-                    from: 3.3,
-                    to: 5.5,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'Gentle breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Moderate breeze
-                    from: 5.5,
-                    to: 8,
-                    color: 'rgba(0, 0, 0, 0)',
-                    label: {
-                        text: 'Moderate breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Fresh breeze
-                    from: 8,
-                    to: 11,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'Fresh breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Strong breeze
-                    from: 11,
-                    to: 14,
-                    color: 'rgba(0, 0, 0, 0)',
-                    label: {
-                        text: 'Strong breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // High wind
-                    from: 14,
-                    to: 15,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'High wind',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }]
-            },
-            tooltip: {
-                valueSuffix: ' m/s'
+                    text: 'dBm'
+                }
             },
             plotOptions: {
                 spline: {
@@ -680,7 +686,8 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'Hestavollane',
+                name: 'Maximum',
+                color: '#20fc8f',
                 data: [
                     3.7, 3.3, 3.9, 5.1, 3.5, 3.8, 4.0, 5.0, 6.1, 3.7, 3.3, 6.4,
                     6.9, 6.0, 6.8, 4.4, 4.0, 3.8, 5.0, 4.9, 9.2, 9.6, 9.5, 6.3,
@@ -690,7 +697,19 @@ function DrawDiagrams() {
                 ]
         
             }, {
-                name: 'Vik',
+                name: 'Average',
+                color: '#ffa100',
+                data: [
+                    1.7, 2.3, 1.9, 3.1, 1.5, 2.8, 2.0, 2.0, 4.1, 3.7, 3.3, 4.4,
+                    5.1, 2.3, 4.0, 2.0, 1.5, 3.8, 5.0, 1.5, 6.5, 5.7, 4.7, 3.0,
+                    9.5, 6.4, 9.7, 8.1, 10.0, 7.0, 5.4, 7.1, 8.9, 10.6, 6.4, 7.0,
+                    10.4, 10.7, 4.7, 5.3, 4.7, 7.9, 5.5, 10.8, 13.0, 8.1, 8.7, 4.2,
+                    5.7
+                ]
+            },
+            {
+                name: 'Minimum',
+                color: '#ff5b58',
                 data: [
                     0.2, 0.1, 0.1, 0.1, 0.3, 0.2, 0.3, 0.1, 0.7, 0.3, 0.2, 0.2,
                     0.3, 0.1, 0.3, 0.4, 0.3, 0.2, 0.3, 0.2, 0.4, 0.0, 0.9, 0.3,
@@ -698,12 +717,7 @@ function DrawDiagrams() {
                     0.3, 2.3, 1.0, 0.7, 1.0, 0.8, 2.0, 1.2, 1.4, 3.7, 2.1, 2.0,
                     1.5
                 ]
-            }],
-            navigation: {
-                menuItemStyle: {
-                    fontSize: '10px'
-                }
-            }
+            }]
         }
         //fifth graph template             
         var content_fifthGraph =
@@ -719,99 +733,30 @@ function DrawDiagrams() {
                     scrollPositionX: 1
                 }
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },             
             title: {
-                text: 'Wind speed during two days'
-            },
-            subtitle: {
-                text: '13th & 14th of February, 2018 at two locations in Vik i Sogn, Norway'
+                text: 'HGw - Bit Rate'
             },
             xAxis: {
                 type: 'datetime',
-                labels: {
-                    overflow: 'justify'
-                }
+                crosshair: true
             },
             yAxis: {
                 title: {
-                    text: 'Wind speed (m/s)'
-                },
-                minorGridLineWidth: 0,
-                gridLineWidth: 0,
-                alternateGridColor: null,
-                plotBands: [{ // Light air
-                    from: 0.3,
-                    to: 1.5,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'Light air',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Light breeze
-                    from: 1.5,
-                    to: 3.3,
-                    color: 'rgba(0, 0, 0, 0)',
-                    label: {
-                        text: 'Light breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Gentle breeze
-                    from: 3.3,
-                    to: 5.5,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'Gentle breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Moderate breeze
-                    from: 5.5,
-                    to: 8,
-                    color: 'rgba(0, 0, 0, 0)',
-                    label: {
-                        text: 'Moderate breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Fresh breeze
-                    from: 8,
-                    to: 11,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'Fresh breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // Strong breeze
-                    from: 11,
-                    to: 14,
-                    color: 'rgba(0, 0, 0, 0)',
-                    label: {
-                        text: 'Strong breeze',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }, { // High wind
-                    from: 14,
-                    to: 15,
-                    color: 'rgba(68, 170, 213, 0.1)',
-                    label: {
-                        text: 'High wind',
-                        style: {
-                            color: '#606060'
-                        }
-                    }
-                }]
-            },
-            tooltip: {
-                valueSuffix: ' m/s'
+                    text: 'dBm'
+                }
             },
             plotOptions: {
                 spline: {
@@ -829,7 +774,8 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'Hestavollane',
+                name: 'Maximum',
+                color: '#20fc8f',
                 data: [
                     3.7, 3.3, 3.9, 5.1, 3.5, 3.8, 4.0, 5.0, 6.1, 3.7, 3.3, 6.4,
                     6.9, 6.0, 6.8, 4.4, 4.0, 3.8, 5.0, 4.9, 9.2, 9.6, 9.5, 6.3,
@@ -839,7 +785,19 @@ function DrawDiagrams() {
                 ]
         
             }, {
-                name: 'Vik',
+                name: 'Average',
+                color: '#ffa100',
+                data: [
+                    1.7, 2.3, 1.9, 3.1, 1.5, 2.8, 2.0, 2.0, 4.1, 3.7, 3.3, 4.4,
+                    5.1, 2.3, 4.0, 2.0, 1.5, 3.8, 5.0, 1.5, 6.5, 5.7, 4.7, 3.0,
+                    9.5, 6.4, 9.7, 8.1, 10.0, 7.0, 5.4, 7.1, 8.9, 10.6, 6.4, 7.0,
+                    10.4, 10.7, 4.7, 5.3, 4.7, 7.9, 5.5, 10.8, 13.0, 8.1, 8.7, 4.2,
+                    5.7
+                ]
+            },
+            {
+                name: 'Minimum',
+                color: '#ff5b58',
                 data: [
                     0.2, 0.1, 0.1, 0.1, 0.3, 0.2, 0.3, 0.1, 0.7, 0.3, 0.2, 0.2,
                     0.3, 0.1, 0.3, 0.4, 0.3, 0.2, 0.3, 0.2, 0.4, 0.0, 0.9, 0.3,
@@ -847,12 +805,7 @@ function DrawDiagrams() {
                     0.3, 2.3, 1.0, 0.7, 1.0, 0.8, 2.0, 1.2, 1.4, 3.7, 2.1, 2.0,
                     1.5
                 ]
-            }],
-            navigation: {
-                menuItemStyle: {
-                    fontSize: '10px'
-                }
-            }
+            }]
         }
         //sixth graph template              
         var content_sixGraph =
@@ -864,13 +817,21 @@ function DrawDiagrams() {
             chart: {
                 type: 'area'
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },             
             title: {
-                text: 'US and USSR nuclear stockpiles'
-            },
-            subtitle: {
-                text: 'Sources: <a href="https://thebulletin.org/2006/july/global-nuclear-stockpiles-1945-2006">' +
-                    'thebulletin.org</a> &amp; <a href="https://www.armscontrol.org/factsheets/Nuclearweaponswhohaswhat">' +
-                    'armscontrol.org</a>'
+                text: 'HGw - Number of retransmissions'
             },
             xAxis: {
                 allowDecimals: false,
@@ -881,17 +842,11 @@ function DrawDiagrams() {
                 }
             },
             yAxis: {
-                title: {
-                    text: 'Nuclear weapon states'
-                },
                 labels: {
                     formatter: function () {
                         return this.value / 1000 + 'k';
                     }
                 }
-            },
-            tooltip: {
-                pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
             },
             plotOptions: {
                 area: {
@@ -909,7 +864,8 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'USA',
+                name: 'Bytes',
+                color: '#0088bc',
                 data: [
                     null, null, null, null, null, 6, 11, 32, 110, 235,
                     369, 640, 1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468,
@@ -921,7 +877,8 @@ function DrawDiagrams() {
                     5113, 5113, 4954, 4804, 4761, 4717, 4368, 4018
                 ]
             }, {
-                name: 'USSR/Russia',
+                name: 'Retransmitted Bytes',
+                color: '#00c2e2',
                 data: [null, null, null, null, null, null, null, null, null, null,
                     5, 25, 50, 120, 150, 200, 426, 660, 869, 1060,
                     1605, 2471, 3322, 4238, 5221, 6129, 7089, 8339, 9399, 10538,
@@ -943,18 +900,28 @@ function DrawDiagrams() {
             chart: {
                 type: 'line'
             },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: [
+                            'printChart',
+                            'downloadPNG',
+                            'downloadJPEG',
+                            'downloadPDF',
+                            'downloadCSV'
+                         ]
+                    }
+                }
+            },             
             title: {
-                text: 'Monthly Average Temperature'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
+                text: 'HGw - Number of clients'
             },
             xAxis: {
                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             },
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: 'No. of clients'
                 }
             },
             plotOptions: {
@@ -966,11 +933,9 @@ function DrawDiagrams() {
                 }
             },
             series: [{
-                name: 'Tokyo',
+                name: '',
+                color: '#c3fafe',
                 data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-            }, {
-                name: 'London',
-                data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
             }]
         }
         //eight graph template              
@@ -1000,23 +965,36 @@ function DrawDiagrams() {
     this.graphsRenderedInterval = null;
     this.counterNumx = 0;
     this.startCheckingForAddedGraphsPlaceholders = function () {
+        console.log('called: startCheckingForAddedGraphsPlaceholders() ' + this.counterNumx)
+        console.log('start----------------------')
+        console.log(this.listOfAllGraphElements)
+        console.log('end----------------------')
         this.remainingGraphsForAdding = JSON.parse(JSON.stringify(this.listOfAllGraphElements));
         this.graphsRenderedInterval = setInterval(this.checkForGraphsAddedToView, 300)
     }
     this.checkForGraphsAddedToView = function () {
         console.log('called: checkForGraphsAddedToView() ' + this.counterNumx)
+        console.log('this.remainingGraphsForAdding.length ' + this.remainingGraphsForAdding.length)
         this.remainingGraphsForAdding.forEach(function (arrayItem, index, arrayObject) {
             if (document.getElementById(arrayItem.elementId)) {
                 this.attachGraphToPlaceholder(arrayItem);
                 this.remainingGraphsForAdding.splice(index, 1);
+                console.log('remainingGraphsForAdding spliced: ' + this.remainingGraphsForAdding.length)
             }
         }.bind(this));
+        console.log('this.remainingGraphsForAdding.length: ' + this.remainingGraphsForAdding.length);
         if (this.remainingGraphsForAdding.length < 1) {
             this.counterNumx++;
             console.log('**************** interval graphs cleared ::' + this.counterNumx + ':: *************')
             clearInterval(this.graphsRenderedInterval);
         }
     }.bind(this);
+    this.resetGraphValuesBeforeRendering = function (){
+        this.listOfAllGraphElements = [];
+        this.remainingGraphsForAdding = [];
+        clearInterval(this.graphsRenderedInterval);
+        this.graphsRenderedInterval = null;
+    }    
     ////
     this.attachGraphToPlaceholder = function (inputObjectWithData) {
         // Build the Graph chart
@@ -1025,4 +1003,27 @@ function DrawDiagrams() {
         }
         Highcharts.chart(inputObjectWithData.elementId, inputObjectWithData.graphData);
     }
+    /*
+        START
+        LOGIC FOR DRAWING 'Currently Viewing Data' table
+     */
+    this.renderCurrentlyViewingDataTable = function () {
+        return `<div class="c-custom-viewing-data-table"><table class="table table-sm">
+            <thead><tr><th colspan="2">Currently viewing data:</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>MAC address:</td>
+                    <td>` + this.returnRandomNumberInRange(10, 300) + `</td>
+                </tr>
+                <tr>
+                    <td>Contract ID:</td>
+                    <td>` + this.returnRandomNumberInRange(10, 300) + `</td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td>` + this.returnRandomNumberInRange(10, 300) + `</td>
+                </tr>                                
+            </tbody>
+        </table></div>`;
+    }    
 }

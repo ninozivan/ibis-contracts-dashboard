@@ -5,6 +5,7 @@ var AppData = {
         {
             contractNumber: '54867972',
             contractMacAddress: '58-90-77-22-75-5C',
+            contractCity: 'Budapest',
             contractHgwInfo: {
                 wifiEnabled: true,
                 hgwStandard: '802.11b',
@@ -26,6 +27,7 @@ var AppData = {
         {
             contractNumber: '31495080',
             contractMacAddress: '5A-3D-30-13-8F-15',
+            contractCity: 'Belgrade',
             contractHgwInfo: {
                 wifiEnabled: false,
                 hgwStandard: '802.11b',
@@ -47,6 +49,7 @@ var AppData = {
         {
             contractNumber: '31452503',
             contractMacAddress: 'A3-43-AE-41-2E-D7',
+            contractCity: 'Vienna',
             contractHgwInfo: {
                 wifiEnabled: true,
                 hgwStandard: '802.11b',
@@ -68,6 +71,7 @@ var AppData = {
         {
             contractNumber: '79238775',
             contractMacAddress: 'B6-06-F6-C7-D5-04',
+            contractCity: 'Novi Sad',
             contractHgwInfo: {
                 wifiEnabled: true,
                 hgwStandard: '802.11c',
@@ -89,6 +93,7 @@ var AppData = {
         {
             contractNumber: '39531833',
             contractMacAddress: '9D-01-4A-A4-CB-91',
+            contractCity: 'Athens',
             contractHgwInfo: {
                 wifiEnabled: true,
                 hgwStandard: '802.11n',
@@ -110,6 +115,7 @@ var AppData = {
         {
             contractNumber: '33992438',
             contractMacAddress: 'D7-C4-71-4A-47-35',
+            contractCity: 'Zagreb',
             contractHgwInfo: {
                 wifiEnabled: true,
                 hgwStandard: '802.11n',
@@ -131,6 +137,7 @@ var AppData = {
         { 
             contractNumber: '93603004', 
             contractMacAddress: '0D-D3-6B-05-86-59',
+            contractCity: 'Istanbul',
             contractHgwInfo: {
                 wifiEnabled: true,
                 hgwStandard: '802.11n',
